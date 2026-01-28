@@ -1,0 +1,252 @@
+# 🌲 Forest Quest RPG
+
+一款功能完整的2D像素风格动作RPG游戏，基于Phaser.js 3.80+开发。
+
+[![Live Demo](https://img.shields.io/badge/demo-online-brightgreen)](https://jgzuo.github.io/forest-quest-rpg/)
+[![Version](https://img.shields.io/badge/version-1.9.4-blue)](https://github.com/jgzuo/forest-quest-rpg)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+## 🎮 游戏简介
+
+年轻的英雄艾瑞克踏上拯救森林的冒险之旅，对抗被黑暗力量腐化的树妖和鼹鼠军团，收集净化宝石，最终击败强大的树妖王、雪怪王和龙王。
+
+## ✨ 核心特色
+
+### ⚔️ 战斗系统
+- **流畅的近战战斗** - 空格键攻击，支持连击系统
+- **暴击系统** - 基于暴击率和暴击伤害的暴击计算
+- **伤害类型** - 物理、火焰、冰霜、魔法四种伤害类型
+- **状态效果** - 中毒、燃烧、冰冻、减速、眩晕、击退
+- **防御系统** - 装备护甲减少伤害
+
+### 🎯 探索与成长
+- **5大区域** - 小镇、森林、洞穴、雪山、火山洞穴
+- **传送系统** - 8个传送点，场景间快速旅行
+- **RPG成长** - 经验值、等级、属性提升
+- **装备系统** - 30+件装备，武器/护甲/饰品三槽位
+- **技能系统** - 旋风斩、冲锋、治疗之光、终极技能
+
+### 📜 任务与剧情
+- **任务系统** - 主线任务和支线任务
+- **NPC对话** - 村长、商人等NPC互动
+- **商店系统** - 购买药水、卷轴、装备
+- **Boss战** - 3个阶段Boss战（树妖王、雪怪王、龙王）
+
+### 💾 存档与成就
+- **存档系统** - 自动保存 + 手动存档/读取（F5/F9）
+- **成就系统** - 追踪游戏里程碑
+- **复活系统** - 死亡后可复活继续战斗
+
+## 📖 在线体验
+
+**GitHub Pages**: https://jgzuo.github.io/forest-quest-rpg/
+
+直接在浏览器中打开即可游玩，无需安装任何依赖！
+
+## 🎯 游戏操作
+
+| 按键 | 功能 |
+|------|------|
+| `WASD` / `方向键` | 移动角色 |
+| `空格键` | 普通攻击 |
+| `1/2/3/4` | 使用技能（旋风斩/冲锋/治疗/终极） |
+| `I` | 打开/关闭物品栏 |
+| `C` | 打开/关闭装备面板 |
+| `E` | 与NPC对话/交互 |
+| `Q` | 打开/关闭任务日志 |
+| `F5` | 快速保存 |
+| `F9` | 快速加载 |
+| `V` / `空格键` | 复活（死亡后） |
+
+## 🛠️ 本地开发
+
+### 克隆仓库
+```bash
+git clone https://github.com/zuojg/forest-quest-rpg.git
+cd forest-quest-rpg
+```
+
+### 启动开发服务器
+```bash
+# 使用 npx (推荐)
+npx live-server --port=8080 --open=/index.html
+
+# 或使用 Python
+python3 -m http.server 8080
+
+# 或使用 PHP
+php -S localhost:8080
+```
+
+### 在浏览器中打开
+```
+http://localhost:8080
+```
+
+## 📊 游戏系统
+
+### 装备系统
+- **武器** - 增加攻击力、暴击率、暴击伤害
+- **护甲** - 增加防御力、生命值
+- **饰品** - 多种属性加成
+- **30+件装备** - 从普通到传说品质
+
+### 战斗系统
+- **连击系统** - 连续攻击提升伤害
+- **暴击系统** - 基础暴击率10% + 装备加成
+- **暴击伤害** - 基础1.5倍 + 装备加成（最高2.5倍）
+- **防御计算** - 敌人攻击 - 玩家防御（至少1点伤害）
+
+### 商店系统
+- **消耗品** - 生命药水、魔法药水、增益药水
+- **特殊物品** - 回城卷轴、食物
+- **价格合理** - 根据效果定价
+
+### 任务系统
+- **主线任务** - 推进剧情，击败Boss
+- **支线任务** - 收集、挑战任务
+- **任务奖励** - 金币、经验、特殊物品
+
+## 📂 项目结构
+
+```
+forest-quest-rpg/
+├── index.html              # 游戏主文件
+├── README.md               # 项目说明(本文件)
+├── CHANGELOG.md            # 版本更新日志
+├── docs/                   # 文档目录
+│   ├── GAME_GUIDE.md      # 游戏完整指南
+│   ├── GAME_DESIGN.md     # 游戏设计文档
+│   ├── DEVELOPMENT_TODO.md # 开发TODO清单
+│   └── ITERATION_PLAN_*.md # 迭代计划
+├── assets/                 # 游戏素材
+│   ├── characters/        # 角色精灵图
+│   ├── environments/      # 环境瓦片地图
+│   └── ui/               # UI元素
+└── src/                   # 源代码
+    ├── main.js           # 游戏入口
+    ├── scenes/           # 游戏场景
+    │   ├── BootScene.js      # 启动场景
+    │   └── GameScene.js      # 主游戏场景
+    ├── entities/         # 游戏实体
+    │   └── Boss.js           # Boss类
+    ├── systems/          # 游戏系统
+    │   ├── CombatSystem.js   # 战斗系统
+    │   ├── SkillSystem.js    # 技能系统
+    │   ├── Inventory.js      # 物品栏系统
+    │   └── StatusEffectSystem.js
+    ├── managers/         # 管理器
+    │   ├── EquipmentManager.js  # 装备管理
+    │   ├── DialogueManager.js   # 对话管理
+    │   ├── QuestManager.js      # 任务管理
+    │   ├── ShopManager.js       # 商店管理
+    │   └── AudioManager.js      # 音频管理
+    ├── ui/               # UI组件
+    │   ├── InventoryUI.js   # 物品栏UI
+    │   └── EquipmentUI.js   # 装备UI
+    └── utils/            # 工具类
+        └── SceneManager.js # 场景管理
+```
+
+## 🎯 开发进度
+
+**当前版本**: v1.9.4
+**状态**: ✅ 功能完整 + 性能优化 + 内容丰富
+
+### 版本历史
+
+#### v1.9.4 (2026-01-27) - UI与防御系统
+- ✅ 装备UI快捷键（C键）
+- ✅ 防御力UI显示
+- ✅ 装备属性完整应用
+- ✅ 防御力伤害计算
+- ✅ 修复快捷键冲突
+- ✅ 修复属性访问方式
+
+#### v1.9.3 (2026-01-27) - 装备系统集成
+- ✅ 完整装备系统集成
+- ✅ critDamage属性支持
+- ✅ 玩家属性初始化
+- ✅ 攻击力UI显示
+
+#### v1.9.2 (2026-01-27) - 暴击系统
+- ✅ 完善暴击伤害计算
+- ✅ 暴击UI显示
+
+#### v1.9.1 (2026-01-27) - 场景优化
+- ✅ 洞穴装饰扩展（40个装饰物）
+- ✅ 传送点对称性修复
+
+### 已完成功能
+
+**核心系统**:
+- ✅ 战斗系统（连击、暴击、防御、伤害类型）
+- ✅ 装备系统（30+件装备，三槽位）
+- ✅ 技能系统（4个技能）
+- ✅ 物品栏系统（24格）
+- ✅ 商店系统（消耗品、特殊物品）
+- ✅ 任务系统（主线+支线）
+- ✅ NPC对话系统
+- ✅ 存档系统（自动+手动）
+
+**内容**:
+- ✅ 5个场景区域（小镇、森林、洞穴、雪山、火山洞穴）
+- ✅ 8个传送点
+- ✅ 多种敌人类型（普通+精英+Boss）
+- ✅ 3个Boss（树妖王、雪怪王、龙王）
+- ✅ 场景装饰（每个场景20-40个装饰物）
+
+## 🎨 素材来源
+
+所有素材来自开源资源:
+- **Tiny RPG Forest Pack** - 森林环境和角色
+- **Tiny RPG Town Pack** - 小镇环境
+- **Tiny RPG Cave Pack** - 洞穴环境
+- **Tiny RPG Snow Pack** - 雪山环境
+- **Kenney.nl** - 开源游戏素材库
+
+## 📊 性能指标
+
+- ✅ **60 FPS** 流畅运行
+- ✅ **内存占用** < 100MB
+- ✅ **加载时间** < 2秒
+- ✅ **对象池优化** - 复用游戏对象，减少GC
+
+## 🌐 浏览器兼容
+
+- ✅ Chrome 90+
+- ✅ Firefox 88+
+- ✅ Safari 14+
+- ✅ Edge 90+
+
+## 📄 许可证
+
+MIT License
+
+详见 [LICENSE](LICENSE) 文件
+
+## 👨‍💻 作者
+
+**Zuo Jianguang (左剑广)**
+- Email: zuojg@msn.com
+- GitHub: [@jgzuo](https://github.com/jgzuo)
+
+## 🙏 致谢
+
+- [Phaser.js](https://phaser.io/) - 强大的HTML5游戏框架
+- [Kenney.nl](https://kenney.nl/assets) - 优质免费游戏素材
+
+## 📮 反馈与贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+如果你喜欢这个项目，请给一个 ⭐ Star！
+
+---
+
+**开发开始**: 2026-01-22
+**最新更新**: 2026-01-27 (v1.9.4)
+**项目状态**: ✅ 活跃开发中
+
+**在线体验**: https://jgzuo.github.io/forest-quest-rpg/
+**完整指南**: 查看 [GAME_GUIDE.md](docs/GAME_GUIDE.md) 🎮

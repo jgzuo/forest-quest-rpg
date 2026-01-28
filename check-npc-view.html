@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NPC Image Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4facfe;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #666;
+            margin-top: 30px;
+        }
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        .image-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .image-box {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+        }
+        .image-box h3 {
+            margin: 0 0 10px 0;
+            color: #4facfe;
+            font-size: 14px;
+        }
+        img {
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            border: 1px solid #ccc;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 4px solid #2196F3;
+            margin: 20px 0;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .grid-item {
+            background: white;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+        canvas {
+            border: 1px solid #999;
+            background: repeating-conic-gradient(#f0f0f0 0% 25%, #ffffff 0% 50%) 50% / 20px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 NPC 图片分析工具</h1>
+
+        <div class="section">
+            <h2>原始图片</h2>
+            <div class="info">
+                <strong>文件:</strong> assets/characters/npc.png<br>
+                <strong>尺寸:</strong> 48 x 64 像素
+            </div>
+            <div class="image-container">
+                <div class="image-box">
+                    <h3>原始图片 (48x64)</h3>
+                    <img src="assets/characters/npc.png" style="width: 96px; height: 128px;">
+                </div>
+                <div class="image-box">
+                    <h3>放大4倍 (192x256)</h3>
+                    <img src="assets/characters/npc.png" style="width: 192px; height: 256px;">
+                </div>
+                <div class="image-box">
+                    <h3>放大8倍 (384x512)</h3>
+                    <img src="assets/characters/npc.png" style="width: 384px; height: 512px;">
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>可能的Spritesheet结构分析</h2>
+
+            <h3>方案1: 3列2行 (每帧16x32) - 最常见</h3>
+            <div class="info">
+                如果NPC图片包含前、后、侧等方向的图，最可能的结构是3列2行或2列3行<br>
+                每帧尺寸: 16x32 或 16x21
+            </div>
+            <div class="grid" id="grid1"></div>
+
+            <h3>方案2: 2列2行 (每帧24x32)</h3>
+            <div class="grid" id="grid2"></div>
+
+            <h3>方案3: 4列2行 (每帧12x32)</h3>
+            <div class="grid" id="grid3"></div>
+        </div>
+
+        <div class="section">
+            <h2>Canvas 切片分析</h2>
+            <canvas id="canvas" width="400" height="400"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // 加载NPC图片并分析
+        const img = new Image();
+        img.onload = function() {
+            analyzeNPCImage(img);
+        };
+        img.src = 'assets/characters/npc.png';
+
+        function analyzeNPCImage(img) {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+
+            // 绘制网格分析
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 原始图片
+            ctx.font = '14px Arial';
+            ctx.fillStyle = '#333';
+            ctx.fillText('原始图片 (48x64):', 10, 20);
+            ctx.drawImage(img, 10, 30, 48, 64);
+
+            // 3列2行方案 (16x32每帧)
+            ctx.fillText('3列2行 (16x32):', 80, 20);
+            for (let col = 0; col < 3; col++) {
+                for (let row = 0; row < 2; row++) {
+                    ctx.drawImage(
+                        img,
+                        col * 16, row * 32, 16, 32,  // 源矩形
+                        80 + col * 35, 30 + row * 70, 16, 32  // 目标位置（放大）
+                    );
+                }
+            }
+
+            // 2列3行方案 (24x21每帧)
+            ctx.fillText('2列3行 (24x21):', 220, 20);
+            for (let col = 0; col < 2; col++) {
+                for (let row = 0; row < 3; row++) {
+                    ctx.drawImage(
+                        img,
+                        col * 24, row * 21, 24, 21,
+                        220 + col * 50, 30 + row * 50, 24, 21
+                    );
+                }
+            }
+
+            // 生成HTML网格
+            generateGrids(img);
+        }
+
+        function generateGrids(img) {
+            // 方案1: 3列2行 (16x32)
+            const grid1 = document.getElementById('grid1');
+            for (let row = 0; row < 2; row++) {
+                for (let col = 0; col < 3; col++) {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 16;
+                    canvas.height = 32;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, col * 16, row * 32, 16, 32, 0, 0, 16, 32);
+
+                    const div = document.createElement('div');
+                    div.className = 'grid-item';
+                    div.innerHTML = `
+                        <canvas width="64" height="128" style="border:1px solid #ddd;"></canvas>
+                        <p style="font-size:12px;margin:5px 0;">[${col},${row}]</p>
+                    `;
+                    const canvas2 = div.querySelector('canvas');
+                    const ctx2 = canvas2.getContext('2d');
+                    ctx2.imageSmoothingEnabled = false;
+                    ctx2.drawImage(canvas, 0, 0, 64, 128);
+                    grid1.appendChild(div);
+                }
+            }
+
+            // 方案2: 2列2行 (24x32)
+            const grid2 = document.getElementById('grid2');
+            for (let row = 0; row < 2; row++) {
+                for (let col = 0; col < 2; col++) {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 24;
+                    canvas.height = 32;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, col * 24, row * 32, 24, 32, 0, 0, 24, 32);
+
+                    const div = document.createElement('div');
+                    div.className = 'grid-item';
+                    div.innerHTML = `
+                        <canvas width="72" height="96" style="border:1px solid #ddd;"></canvas>
+                        <p style="font-size:12px;margin:5px 0;">[${col},${row}]</p>
+                    `;
+                    const canvas2 = div.querySelector('canvas');
+                    const ctx2 = canvas2.getContext('2d');
+                    ctx2.imageSmoothingEnabled = false;
+                    ctx2.drawImage(canvas, 0, 0, 72, 96);
+                    grid2.appendChild(div);
+                }
+            }
+
+            // 方案3: 4列2行 (12x32)
+            const grid3 = document.getElementById('grid3');
+            for (let row = 0; row < 2; row++) {
+                for (let col = 0; col < 4; col++) {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 12;
+                    canvas.height = 32;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, col * 12, row * 32, 12, 32, 0, 0, 12, 32);
+
+                    const div = document.createElement('div');
+                    div.className = 'grid-item';
+                    div.innerHTML = `
+                        <canvas width="48" height="128" style="border:1px solid #ddd;"></canvas>
+                        <p style="font-size:12px;margin:5px 0;">[${col},${row}]</p>
+                    `;
+                    const canvas2 = div.querySelector('canvas');
+                    const ctx2 = canvas2.getContext('2d');
+                    ctx2.imageSmoothingEnabled = false;
+                    ctx2.drawImage(canvas, 0, 0, 48, 128);
+                    grid3.appendChild(div);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

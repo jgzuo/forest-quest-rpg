@@ -1,0 +1,2703 @@
+{
+  "config": {
+    "configFile": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/playwright.config.js",
+    "rootDir": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report",
+          "open": "never"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.57.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npx -y http-server -p 55573 --silent",
+      "url": "http://127.0.0.1:55573",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "combat-system.spec.js",
+      "file": "combat-system.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "战斗系统测试 - 血条和奖励",
+          "file": "combat-system.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "应该显示敌人血条并且攻击时血条下降",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 10288,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🔍 开始测试战斗系统...\n"
+                        },
+                        {
+                          "text": "⏳ 等待游戏加载...\n"
+                        },
+                        {
+                          "text": "🌲 传送到森林场景...\n"
+                        },
+                        {
+                          "text": "👹 敌人信息: {\n  \"enemyCount\": 8,\n  \"enemies\": [\n    {\n      \"x\": 336.36393983155716,\n      \"y\": 395.1134172295152,\n      \"hp\": 30,\n      \"maxHp\": 30,\n      \"hasHpBar\": true,\n      \"hasHpBarBg\": true,\n      \"hpBarWidth\": 40,\n      \"gold\": 10\n    },\n    {\n      \"x\": 383.41303874317657,\n      \"y\": 330.02567077124104,\n      \"hp\": 30,\n      \"maxHp\": 30,\n      \"hasHpBar\": true,\n      \"hasHpBarBg\": true,\n      \"hpBarWidth\": 40,\n      \"gold\": 10\n    },\n    {\n      \"x\": 346.45710956019553,\n      \"y\": 366.7635974024764,\n      \"hp\": 30,\n      \"maxHp\": 30,\n      \"hasHpBar\": true,\n      \"hasHpBarBg\": true,\n      \"hpBarWidth\": 40,\n      \"gold\": 10\n    },\n    {\n      \"x\": 419.8437614129764,\n      \"y\": 295.4739090366097,\n      \"hp\": 30,\n      \"maxHp\": 30,\n      \"hasHpBar\": true,\n      \"hasHpBarBg\": true,\n      \"hpBarWidth\": 40,\n      \"gold\": 10\n    },\n    {\n      \"x\": 174.55629976131883,\n      \"y\": 383.3580851498099,\n      \"hp\": 30,\n      \"maxHp\": 30,\n      \"hasHpBar\": true,\n      \"hasHpBarBg\": true,\n      \"hpBarWidth\": 40,\n      \"gold\": 10\n    },\n    {\n      \"x\": 538.1914779457361,\n      \"y\": 234.271278308141,\n      \"hp\": 80,\n      \"maxHp\": 80,\n      \"hasHpBar\": true,\n      \"hasHpBarBg\": true,\n      \"hpBarWidth\": 40,\n      \"gold\": 25\n    },\n    {\n      \"x\": 475.90329454449346,\n      \"y\": 342.91133499366424,\n      \"hp\": 80,\n      \"maxHp\": 80,\n      \"hasHpBar\": true,\n      \"hasHpBarBg\": true,\n      \"hpBarWidth\": 40,\n      \"gold\": 25\n    },\n    {\n      \"x\": 437.92702861711064,\n      \"y\": 260.2935741374905,\n      \"hp\": 80,\n      \"maxHp\": 80,\n      \"hasHpBar\": true,\n      \"hasHpBarBg\": true,\n      \"hpBarWidth\": 40,\n      \"gold\": 25\n    }\n  ],\n  \"currentScene\": \"forest\"\n}\n"
+                        },
+                        {
+                          "text": "✅ 敌人血条初始化正确\n"
+                        },
+                        {
+                          "text": "💰 金币显示: {\n  \"displayed\": true,\n  \"gold\": 100\n}\n"
+                        },
+                        {
+                          "text": "✅ 已保存战斗系统截图: test-results/combat-hp-bars.png\n"
+                        },
+                        {
+                          "text": "\n📊 测试总结:\n"
+                        },
+                        {
+                          "text": "  - 当前场景: forest\n"
+                        },
+                        {
+                          "text": "  - 敌人数量: 8\n"
+                        },
+                        {
+                          "text": "  - 血条显示: 正确\n"
+                        },
+                        {
+                          "text": "  - 金币显示: 100\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T10:57:32.730Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41519750f8eca67d1e96-a396652823778d0ab26b",
+              "file": "combat-system.spec.js",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "combat.spec.js",
+      "file": "combat.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "战斗系统测试",
+          "file": "combat.spec.js",
+          "line": 43,
+          "column": 6,
+          "specs": [
+            {
+              "title": "森林场景应该生成敌人",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 10260,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "当前场景: forest, 敌人数量: 8\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T10:57:43.348Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d0cd575ab738e489fd67-09a2af97e0b8bb40bf3d",
+              "file": "combat.spec.js",
+              "line": 50,
+              "column": 7
+            },
+            {
+              "title": "玩家应该能够攻击敌人",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 11072,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js:98:30",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                          "column": 30,
+                          "line": 98
+                        },
+                        "snippet": "   96 |     });\n   97 |\n>  98 |     expect(enemyInfo.exists).toBeTruthy();\n      |                              ^\n   99 |     expect(enemyInfo.hp).toBeGreaterThan(0);\n  100 |\n  101 |     await page.waitForTimeout(1000);"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                            "column": 30,
+                            "line": 98
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n\n   96 |     });\n   97 |\n>  98 |     expect(enemyInfo.exists).toBeTruthy();\n      |                              ^\n   99 |     expect(enemyInfo.hp).toBeGreaterThan(0);\n  100 |\n  101 |     await page.waitForTimeout(1000);\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js:98:30"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T10:57:53.612Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-玩家应该能够攻击敌人-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-玩家应该能够攻击敌人-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-玩家应该能够攻击敌人-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                        "column": 30,
+                        "line": 98
+                      }
+                    },
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 10429,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js:98:30",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                          "column": 30,
+                          "line": 98
+                        },
+                        "snippet": "   96 |     });\n   97 |\n>  98 |     expect(enemyInfo.exists).toBeTruthy();\n      |                              ^\n   99 |     expect(enemyInfo.hp).toBeGreaterThan(0);\n  100 |\n  101 |     await page.waitForTimeout(1000);"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                            "column": 30,
+                            "line": 98
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n\n   96 |     });\n   97 |\n>  98 |     expect(enemyInfo.exists).toBeTruthy();\n      |                              ^\n   99 |     expect(enemyInfo.hp).toBeGreaterThan(0);\n  100 |\n  101 |     await page.waitForTimeout(1000);\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js:98:30"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2026-01-24T10:58:05.155Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-玩家应该能够攻击敌人-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-玩家应该能够攻击敌人-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-玩家应该能够攻击敌人-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-玩家应该能够攻击敌人-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                        "column": 30,
+                        "line": 98
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d0cd575ab738e489fd67-5284e67c688b332e62f8",
+              "file": "combat.spec.js",
+              "line": 75,
+              "column": 7
+            },
+            {
+              "title": "击败敌人应该获得XP",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 10801,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js:148:34",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                          "column": 34,
+                          "line": 148
+                        },
+                        "snippet": "  146 |     });\n  147 |\n> 148 |     expect(setupResult.hasEnemy).toBeTruthy();\n      |                                  ^\n  149 |\n  150 |     await page.waitForTimeout(500);\n  151 |     await page.keyboard.press('Space');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                            "column": 34,
+                            "line": 148
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n\n  146 |     });\n  147 |\n> 148 |     expect(setupResult.hasEnemy).toBeTruthy();\n      |                                  ^\n  149 |\n  150 |     await page.waitForTimeout(500);\n  151 |     await page.keyboard.press('Space');\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js:148:34"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T10:58:16.239Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-击败敌人应该获得XP-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-击败敌人应该获得XP-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-击败敌人应该获得XP-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                        "column": 34,
+                        "line": 148
+                      }
+                    },
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 11265,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js:148:34",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                          "column": 34,
+                          "line": 148
+                        },
+                        "snippet": "  146 |     });\n  147 |\n> 148 |     expect(setupResult.hasEnemy).toBeTruthy();\n      |                                  ^\n  149 |\n  150 |     await page.waitForTimeout(500);\n  151 |     await page.keyboard.press('Space');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                            "column": 34,
+                            "line": 148
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n\n  146 |     });\n  147 |\n> 148 |     expect(setupResult.hasEnemy).toBeTruthy();\n      |                                  ^\n  149 |\n  150 |     await page.waitForTimeout(500);\n  151 |     await page.keyboard.press('Space');\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js:148:34"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2026-01-24T10:58:27.391Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-击败敌人应该获得XP-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-击败敌人应该获得XP-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-击败敌人应该获得XP-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-击败敌人应该获得XP-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                        "column": 34,
+                        "line": 148
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d0cd575ab738e489fd67-9f72a6db068ea4b009ef",
+              "file": "combat.spec.js",
+              "line": 123,
+              "column": 7
+            },
+            {
+              "title": "敌人应该追踪玩家",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 12467,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T10:58:39.138Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d0cd575ab738e489fd67-5f77eeb8a1fde516a4c0",
+              "file": "combat.spec.js",
+              "line": 165,
+              "column": 7
+            },
+            {
+              "title": "玩家应该受到敌人伤害",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 10077,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js:249:34",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                          "column": 34,
+                          "line": 249
+                        },
+                        "snippet": "  247 |     });\n  248 |\n> 249 |     expect(setupResult.hasEnemy).toBeTruthy();\n      |                                  ^\n  250 |\n  251 |     // 等待碰撞伤害\n  252 |     await page.waitForTimeout(3000);"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                            "column": 34,
+                            "line": 249
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n\n  247 |     });\n  248 |\n> 249 |     expect(setupResult.hasEnemy).toBeTruthy();\n      |                                  ^\n  250 |\n  251 |     // 等待碰撞伤害\n  252 |     await page.waitForTimeout(3000);\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js:249:34"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T10:58:51.692Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-玩家应该受到敌人伤害-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-玩家应该受到敌人伤害-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-玩家应该受到敌人伤害-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                        "column": 34,
+                        "line": 249
+                      }
+                    },
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 11397,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js:249:34",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                          "column": 34,
+                          "line": 249
+                        },
+                        "snippet": "  247 |     });\n  248 |\n> 249 |     expect(setupResult.hasEnemy).toBeTruthy();\n      |                                  ^\n  250 |\n  251 |     // 等待碰撞伤害\n  252 |     await page.waitForTimeout(3000);"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                            "column": 34,
+                            "line": 249
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n\n  247 |     });\n  248 |\n> 249 |     expect(setupResult.hasEnemy).toBeTruthy();\n      |                                  ^\n  250 |\n  251 |     // 等待碰撞伤害\n  252 |     await page.waitForTimeout(3000);\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js:249:34"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2026-01-24T10:59:02.057Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-玩家应该受到敌人伤害-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-玩家应该受到敌人伤害-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-玩家应该受到敌人伤害-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/combat-战斗系统测试-玩家应该受到敌人伤害-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/combat.spec.js",
+                        "column": 34,
+                        "line": 249
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d0cd575ab738e489fd67-0eb51eee7fe8347fe388",
+              "file": "combat.spec.js",
+              "line": 226,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "comprehensive-combat.spec.js",
+      "file": "comprehensive-combat.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "综合战斗系统测试",
+          "file": "comprehensive-combat.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "验证NPC显示和战斗系统完整功能",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 11966,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🔍 开始综合测试...\n"
+                        },
+                        {
+                          "text": "⏳ 等待游戏加载...\n"
+                        },
+                        {
+                          "text": "\n📋 测试1: 验证小镇NPC\n"
+                        },
+                        {
+                          "text": "📍 小镇场景NPC信息: {\n  \"sceneName\": \"town\",\n  \"npcCount\": 2,\n  \"npcs\": [\n    {\n      \"x\": 400,\n      \"y\": 200,\n      \"name\": \"村长\",\n      \"id\": \"elder\",\n      \"scaleX\": 3,\n      \"scaleY\": 3\n    },\n    {\n      \"x\": 600,\n      \"y\": 200,\n      \"name\": \"商人\",\n      \"id\": \"merchant\",\n      \"scaleX\": 3,\n      \"scaleY\": 3\n    }\n  ]\n}\n"
+                        },
+                        {
+                          "text": "✅ 小镇NPC显示正确：2个不同NPC，每个只显示一个方向\n"
+                        },
+                        {
+                          "text": "\n🌲 测试2: 传送到森林测试战斗\n"
+                        },
+                        {
+                          "text": "🌲 森林场景信息: {\n  \"currentScene\": \"forest\",\n  \"playerX\": 100,\n  \"playerY\": 300\n}\n"
+                        },
+                        {
+                          "text": "\n👹 测试3: 验证敌人和血条\n"
+                        },
+                        {
+                          "text": "👹 敌人信息: {\n  \"enemyCount\": 8,\n  \"enemies\": [\n    {\n      \"hp\": 30,\n      \"maxHp\": 30,\n      \"gold\": 10,\n      \"xp\": 15,\n      \"hasHpBar\": true,\n      \"hpBarWidth\": 40\n    },\n    {\n      \"hp\": 30,\n      \"maxHp\": 30,\n      \"gold\": 10,\n      \"xp\": 15,\n      \"hasHpBar\": true,\n      \"hpBarWidth\": 40\n    },\n    {\n      \"hp\": 30,\n      \"maxHp\": 30,\n      \"gold\": 10,\n      \"xp\": 15,\n      \"hasHpBar\": true,\n      \"hpBarWidth\": 40\n    },\n    {\n      \"hp\": 30,\n      \"maxHp\": 30,\n      \"gold\": 10,\n      \"xp\": 15,\n      \"hasHpBar\": true,\n      \"hpBarWidth\": 40\n    },\n    {\n      \"hp\": 30,\n      \"maxHp\": 30,\n      \"gold\": 10,\n      \"xp\": 15,\n      \"hasHpBar\": true,\n      \"hpBarWidth\": 40\n    },\n    {\n      \"hp\": 80,\n      \"maxHp\": 80,\n      \"gold\": 25,\n      \"xp\": 50,\n      \"hasHpBar\": true,\n      \"hpBarWidth\": 40\n    },\n    {\n      \"hp\": 80,\n      \"maxHp\": 80,\n      \"gold\": 25,\n      \"xp\": 50,\n      \"hasHpBar\": true,\n      \"hpBarWidth\": 40\n    },\n    {\n      \"hp\": 80,\n      \"maxHp\": 80,\n      \"gold\": 25,\n      \"xp\": 50,\n      \"hasHpBar\": true,\n      \"hpBarWidth\": 40\n    }\n  ]\n}\n"
+                        },
+                        {
+                          "text": "✅ 所有敌人都有血条和奖励配置\n"
+                        },
+                        {
+                          "text": "\n💰 测试4: 验证玩家状态UI\n"
+                        },
+                        {
+                          "text": "👤 玩家信息: {\n  \"gold\": 100,\n  \"hp\": 100,\n  \"maxHp\": 100,\n  \"xp\": 0,\n  \"xpToNextLevel\": 100,\n  \"level\": 1\n}\n"
+                        },
+                        {
+                          "text": "✅ 玩家初始状态正确\n"
+                        },
+                        {
+                          "text": "\n📊 测试总结:\n"
+                        },
+                        {
+                          "text": "  ✅ 小镇NPC: 2个 (村长, 商人)\n"
+                        },
+                        {
+                          "text": "  ✅ 森林敌人: 8个\n"
+                        },
+                        {
+                          "text": "  ✅ 玩家金币: 100G\n"
+                        },
+                        {
+                          "text": "  ✅ 玩家等级: Lv.1\n"
+                        },
+                        {
+                          "text": "\n🎉 所有测试通过！\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T10:59:14.027Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "43fd32cbcfeadafd5580-a107c604e9415b98c063",
+              "file": "comprehensive-combat.spec.js",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "debug-autosave.spec.js",
+      "file": "debug-autosave.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Auto-save Debug",
+          "file": "debug-autosave.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should log save events on level up",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 8957,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Auto-save logs: [\n  \u001b[32m'💾 [Level Up] Triggering auto-save...'\u001b[39m,\n  \u001b[32m'💾 [AutoSave] Auto-save triggered'\u001b[39m,\n  \u001b[32m'💾 [SaveManager] Game saved successfully'\u001b[39m,\n  \u001b[32m'💾 [SaveManager] Save data structure: [version, timestamp, player, currentScene, scene, progress, inventory, quests]'\u001b[39m,\n  \u001b[32m'💾 [SaveManager] Save data: {version: 1.2.0, timestamp: 2026-01-24T10:59:32.972Z, player: Object, currentScene: town, scene: Object}'\u001b[39m,\n  \u001b[32m'💾 [AutoSave] Auto-save completed successfully'\u001b[39m\n]\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T10:59:26.093Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b7c7aeb6091f72c8fe34-2ab16f707421c6696227",
+              "file": "debug-autosave.spec.js",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "game-loading.spec.js",
+      "file": "game-loading.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "游戏加载测试",
+          "file": "game-loading.spec.js",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "应该正确加载游戏页面",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3291,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T10:59:35.057Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f645fd9c5adc1c5cd083-bf7221fe821e54239cde",
+              "file": "game-loading.spec.js",
+              "line": 13,
+              "column": 7
+            },
+            {
+              "title": "应该正确加载所有JavaScript文件",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 3511,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/game-loading.spec.js:45:23",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/game-loading.spec.js",
+                          "column": 23,
+                          "line": 45
+                        },
+                        "snippet": "  43 |       const isFound = response.status() === 200 ||\n  44 |                       (response.status() === 404 && file.includes('Scene'));\n> 45 |       expect(isFound).toBeTruthy();\n     |                       ^\n  46 |     }\n  47 |\n  48 |     // 验证游戏对象已正确初始化(间接证明JS已加载)"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/game-loading.spec.js",
+                            "column": 23,
+                            "line": 45
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n\n  43 |       const isFound = response.status() === 200 ||\n  44 |                       (response.status() === 404 && file.includes('Scene'));\n> 45 |       expect(isFound).toBeTruthy();\n     |                       ^\n  46 |     }\n  47 |\n  48 |     // 验证游戏对象已正确初始化(间接证明JS已加载)\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/game-loading.spec.js:45:23"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T10:59:38.353Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/game-loading-游戏加载测试-应该正确加载所有JavaScript文件-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/game-loading-游戏加载测试-应该正确加载所有JavaScript文件-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/game-loading-游戏加载测试-应该正确加载所有JavaScript文件-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/game-loading.spec.js",
+                        "column": 23,
+                        "line": 45
+                      }
+                    },
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5320,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/game-loading.spec.js:45:23",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/game-loading.spec.js",
+                          "column": 23,
+                          "line": 45
+                        },
+                        "snippet": "  43 |       const isFound = response.status() === 200 ||\n  44 |                       (response.status() === 404 && file.includes('Scene'));\n> 45 |       expect(isFound).toBeTruthy();\n     |                       ^\n  46 |     }\n  47 |\n  48 |     // 验证游戏对象已正确初始化(间接证明JS已加载)"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/game-loading.spec.js",
+                            "column": 23,
+                            "line": 45
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n\n  43 |       const isFound = response.status() === 200 ||\n  44 |                       (response.status() === 404 && file.includes('Scene'));\n> 45 |       expect(isFound).toBeTruthy();\n     |                       ^\n  46 |     }\n  47 |\n  48 |     // 验证游戏对象已正确初始化(间接证明JS已加载)\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/game-loading.spec.js:45:23"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2026-01-24T10:59:42.205Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/game-loading-游戏加载测试-应该正确加载所有JavaScript文件-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/game-loading-游戏加载测试-应该正确加载所有JavaScript文件-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/game-loading-游戏加载测试-应该正确加载所有JavaScript文件-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/game-loading-游戏加载测试-应该正确加载所有JavaScript文件-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/game-loading.spec.js",
+                        "column": 23,
+                        "line": 45
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "f645fd9c5adc1c5cd083-a9786f3976fc2131a1d1",
+              "file": "game-loading.spec.js",
+              "line": 25,
+              "column": 7
+            },
+            {
+              "title": "应该正确初始化Canvas游戏",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3353,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T10:59:48.028Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f645fd9c5adc1c5cd083-6d826f93c0d96e2dbfff",
+              "file": "game-loading.spec.js",
+              "line": 56,
+              "column": 7
+            },
+            {
+              "title": "应该正确显示UI元素",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7407,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T10:59:51.485Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f645fd9c5adc1c5cd083-62f11c89b1c88465f881",
+              "file": "game-loading.spec.js",
+              "line": 68,
+              "column": 7
+            },
+            {
+              "title": "应该没有JavaScript错误",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 6872,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T10:59:58.897Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f645fd9c5adc1c5cd083-0a5d253a1f81b453c29c",
+              "file": "game-loading.spec.js",
+              "line": 88,
+              "column": 7
+            },
+            {
+              "title": "应该正确初始化玩家对象",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5226,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:00:05.773Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f645fd9c5adc1c5cd083-c7fa532c620715b5de30",
+              "file": "game-loading.spec.js",
+              "line": 108,
+              "column": 7
+            },
+            {
+              "title": "应该正确加载游戏资源",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2975,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:00:11.003Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f645fd9c5adc1c5cd083-a9dcf6535441cfcc468e",
+              "file": "game-loading.spec.js",
+              "line": 120,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "npc-display.spec.js",
+      "file": "npc-display.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "NPC显示测试",
+          "file": "npc-display.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "完整游戏画面和NPC显示检查",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 9468,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🔍 开始完整游戏画面和NPC检查...\n"
+                        },
+                        {
+                          "text": "⏳ 等待游戏加载...\n"
+                        },
+                        {
+                          "text": "📐 游戏画布信息: {\n  \"width\": 800,\n  \"height\": 600,\n  \"styleWidth\": \"700px\",\n  \"styleHeight\": \"525px\"\n}\n"
+                        },
+                        {
+                          "text": "✅ 已保存完整游戏截图: test-results/npc-full-game.png\n"
+                        },
+                        {
+                          "text": "👥 NPC信息: {\n  \"npcCount\": 2,\n  \"npcs\": [\n    {\n      \"x\": 400,\n      \"y\": 200,\n      \"scaleX\": 3,\n      \"scaleY\": 3,\n      \"frame\": 4,\n      \"visible\": true,\n      \"alpha\": 1\n    },\n    {\n      \"x\": 600,\n      \"y\": 200,\n      \"scaleX\": 3,\n      \"scaleY\": 3,\n      \"frame\": 9,\n      \"visible\": true,\n      \"alpha\": 1\n    }\n  ]\n}\n"
+                        },
+                        {
+                          "text": "🎨 NPC纹理信息: {\n  \"key\": \"npc\"\n}\n"
+                        },
+                        {
+                          "text": "📋 NPC相关日志:\n"
+                        },
+                        {
+                          "text": "\n📊 测试总结:\n"
+                        },
+                        {
+                          "text": "  - NPC数量: 2\n"
+                        },
+                        {
+                          "text": "  - 纹理宽度: undefinedxundefined\n"
+                        },
+                        {
+                          "text": "  - 纹理总帧数: undefined\n"
+                        },
+                        {
+                          "text": "  - 单帧尺寸: undefinedxundefined\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:00:13.986Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4a4dfbca68989141bfd-b0e6bc0fbc561b45b241",
+              "file": "npc-display.spec.js",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "npc-interaction.spec.js",
+      "file": "npc-interaction.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "NPC交互测试",
+          "file": "npc-interaction.spec.js",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "小镇场景应该有NPC",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5482,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:00:23.461Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "13cc9180702bd068967a-8e42c183c8ac9a940a7f",
+              "file": "npc-interaction.spec.js",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "应该能够与村长NPC对话",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 9238,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:00:28.947Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "13cc9180702bd068967a-7ea5c10b874cc58dcf4c",
+              "file": "npc-interaction.spec.js",
+              "line": 30,
+              "column": 7
+            },
+            {
+              "title": "应该能够与商人NPC交互",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7840,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:00:38.188Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "13cc9180702bd068967a-b077a77efbb7f83bf741",
+              "file": "npc-interaction.spec.js",
+              "line": 64,
+              "column": 7
+            },
+            {
+              "title": "应该显示交互提示",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7464,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:00:46.033Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "13cc9180702bd068967a-ffff2105e51650e3d16a",
+              "file": "npc-interaction.spec.js",
+              "line": 89,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "player-controls.spec.js",
+      "file": "player-controls.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "玩家控制测试",
+          "file": "player-controls.spec.js",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "应该能够使用WASD键移动玩家",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 6181,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m300\u001b[39m\nReceived:   \u001b[31m300\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m300\u001b[39m\nReceived:   \u001b[31m300\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js:33:22",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                          "column": 22,
+                          "line": 33
+                        },
+                        "snippet": "  31 |     });\n  32 |\n> 33 |     expect(afterW.y).toBeLessThan(initialPos.y);\n     |                      ^\n  34 |\n  35 |     // 按S键向下移动 - 按住一段时间\n  36 |     await page.keyboard.down('S');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                            "column": 22,
+                            "line": 33
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m300\u001b[39m\nReceived:   \u001b[31m300\u001b[39m\n\n  31 |     });\n  32 |\n> 33 |     expect(afterW.y).toBeLessThan(initialPos.y);\n     |                      ^\n  34 |\n  35 |     // 按S键向下移动 - 按住一段时间\n  36 |     await page.keyboard.down('S');\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js:33:22"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:00:53.504Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-应该能够使用WASD键移动玩家-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-应该能够使用WASD键移动玩家-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-应该能够使用WASD键移动玩家-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                        "column": 22,
+                        "line": 33
+                      }
+                    },
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 6404,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m300\u001b[39m\nReceived:   \u001b[31m300\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m300\u001b[39m\nReceived:   \u001b[31m300\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js:33:22",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                          "column": 22,
+                          "line": 33
+                        },
+                        "snippet": "  31 |     });\n  32 |\n> 33 |     expect(afterW.y).toBeLessThan(initialPos.y);\n     |                      ^\n  34 |\n  35 |     // 按S键向下移动 - 按住一段时间\n  36 |     await page.keyboard.down('S');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                            "column": 22,
+                            "line": 33
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m300\u001b[39m\nReceived:   \u001b[31m300\u001b[39m\n\n  31 |     });\n  32 |\n> 33 |     expect(afterW.y).toBeLessThan(initialPos.y);\n     |                      ^\n  34 |\n  35 |     // 按S键向下移动 - 按住一段时间\n  36 |     await page.keyboard.down('S');\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js:33:22"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2026-01-24T11:01:00.011Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-应该能够使用WASD键移动玩家-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-应该能够使用WASD键移动玩家-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-应该能够使用WASD键移动玩家-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-应该能够使用WASD键移动玩家-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                        "column": 22,
+                        "line": 33
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "5d561682b5d07c3aa691-f39708629317960c3cfd",
+              "file": "player-controls.spec.js",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "应该能够使用方向键移动玩家",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 7818,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m300\u001b[39m\nReceived:   \u001b[31m300\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m300\u001b[39m\nReceived:   \u001b[31m300\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js:90:23",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                          "column": 23,
+                          "line": 90
+                        },
+                        "snippet": "  88 |     });\n  89 |\n> 90 |     expect(afterUp.y).toBeLessThan(initialPos.y);\n     |                       ^\n  91 |   });\n  92 |\n  93 |   test('玩家移动时应该只显示一个角色实例', async ({ page }) => {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                            "column": 23,
+                            "line": 90
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m300\u001b[39m\nReceived:   \u001b[31m300\u001b[39m\n\n  88 |     });\n  89 |\n> 90 |     expect(afterUp.y).toBeLessThan(initialPos.y);\n     |                       ^\n  91 |   });\n  92 |\n  93 |   test('玩家移动时应该只显示一个角色实例', async ({ page }) => {\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js:90:23"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:01:06.987Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-应该能够使用方向键移动玩家-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-应该能够使用方向键移动玩家-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-应该能够使用方向键移动玩家-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                        "column": 23,
+                        "line": 90
+                      }
+                    },
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 6832,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m300\u001b[39m\nReceived:   \u001b[31m300\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m300\u001b[39m\nReceived:   \u001b[31m300\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js:90:23",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                          "column": 23,
+                          "line": 90
+                        },
+                        "snippet": "  88 |     });\n  89 |\n> 90 |     expect(afterUp.y).toBeLessThan(initialPos.y);\n     |                       ^\n  91 |   });\n  92 |\n  93 |   test('玩家移动时应该只显示一个角色实例', async ({ page }) => {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                            "column": 23,
+                            "line": 90
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m300\u001b[39m\nReceived:   \u001b[31m300\u001b[39m\n\n  88 |     });\n  89 |\n> 90 |     expect(afterUp.y).toBeLessThan(initialPos.y);\n     |                       ^\n  91 |   });\n  92 |\n  93 |   test('玩家移动时应该只显示一个角色实例', async ({ page }) => {\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js:90:23"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2026-01-24T11:01:15.170Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-应该能够使用方向键移动玩家-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-应该能够使用方向键移动玩家-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-应该能够使用方向键移动玩家-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-应该能够使用方向键移动玩家-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                        "column": 23,
+                        "line": 90
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "5d561682b5d07c3aa691-2b2e7dda5c15cfbfb2f2",
+              "file": "player-controls.spec.js",
+              "line": 74,
+              "column": 7
+            },
+            {
+              "title": "玩家移动时应该只显示一个角色实例",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 12186,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:01:22.461Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5d561682b5d07c3aa691-4b0a44e1862c4bd5b331",
+              "file": "player-controls.spec.js",
+              "line": 93,
+              "column": 7
+            },
+            {
+              "title": "玩家纹理应该正确切换",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7333,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "纹理切换次数: 0\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:01:34.737Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5d561682b5d07c3aa691-9a3d6d8fce5c325ab8f9",
+              "file": "player-controls.spec.js",
+              "line": 136,
+              "column": 7
+            },
+            {
+              "title": "应该能够执行攻击动作",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5812,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:01:42.074Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5d561682b5d07c3aa691-2846b50b6d80e6e45841",
+              "file": "player-controls.spec.js",
+              "line": 182,
+              "column": 7
+            },
+            {
+              "title": "玩家flipX属性应该正确设置",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5668,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js:228:22",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                          "column": 22,
+                          "line": 228
+                        },
+                        "snippet": "  226 |\n  227 |     // 向左移动flipX应为true,向右移动flipX应为false\n> 228 |     expect(flipLeft).toBe(true);\n      |                      ^\n  229 |     expect(flipRight).toBe(false);\n  230 |   });\n  231 | });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                            "column": 22,
+                            "line": 228
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n  226 |\n  227 |     // 向左移动flipX应为true,向右移动flipX应为false\n> 228 |     expect(flipLeft).toBe(true);\n      |                      ^\n  229 |     expect(flipRight).toBe(false);\n  230 |   });\n  231 | });\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js:228:22"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:01:47.890Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-玩家flipX属性应该正确设置-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-玩家flipX属性应该正确设置-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-玩家flipX属性应该正确设置-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                        "column": 22,
+                        "line": 228
+                      }
+                    },
+                    {
+                      "workerIndex": 13,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 6545,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js:228:22",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                          "column": 22,
+                          "line": 228
+                        },
+                        "snippet": "  226 |\n  227 |     // 向左移动flipX应为true,向右移动flipX应为false\n> 228 |     expect(flipLeft).toBe(true);\n      |                      ^\n  229 |     expect(flipRight).toBe(false);\n  230 |   });\n  231 | });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                            "column": 22,
+                            "line": 228
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n  226 |\n  227 |     // 向左移动flipX应为true,向右移动flipX应为false\n> 228 |     expect(flipLeft).toBe(true);\n      |                      ^\n  229 |     expect(flipRight).toBe(false);\n  230 |   });\n  231 | });\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js:228:22"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2026-01-24T11:01:53.853Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-玩家flipX属性应该正确设置-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-玩家flipX属性应该正确设置-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-玩家flipX属性应该正确设置-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/player-controls-玩家控制测试-玩家flipX属性应该正确设置-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/player-controls.spec.js",
+                        "column": 22,
+                        "line": 228
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "5d561682b5d07c3aa691-83b9668c9e8db3a066f7",
+              "file": "player-controls.spec.js",
+              "line": 205,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "save-load.spec.js",
+      "file": "save-load.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "保存/加载测试",
+          "file": "save-load.spec.js",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "应该能够快速保存游戏",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7200,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:02:01.544Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2eb20750cca024ec40f3-6399d55baf762ffeaa20",
+              "file": "save-load.spec.js",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "应该能够检测存档存在",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 9931,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:02:08.847Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2eb20750cca024ec40f3-d163371839074ef891ac",
+              "file": "save-load.spec.js",
+              "line": 46,
+              "column": 7
+            },
+            {
+              "title": "应该能够快速加载游戏",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 8021,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:02:18.782Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2eb20750cca024ec40f3-713c024a54fdfe60956f",
+              "file": "save-load.spec.js",
+              "line": 78,
+              "column": 7
+            },
+            {
+              "title": "升级后应该自动保存",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 6932,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:02:26.808Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2eb20750cca024ec40f3-7c8c23a7c30bbb43a156",
+              "file": "save-load.spec.js",
+              "line": 133,
+              "column": 7
+            },
+            {
+              "title": "场景切换后应该自动保存",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 8428,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:02:33.745Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2eb20750cca024ec40f3-4363440ad07ebdf78adf",
+              "file": "save-load.spec.js",
+              "line": 158,
+              "column": 7
+            },
+            {
+              "title": "存档应该包含所有关键数据",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7358,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:02:42.178Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2eb20750cca024ec40f3-af38827bb2f1a6c005a9",
+              "file": "save-load.spec.js",
+              "line": 181,
+              "column": 7
+            },
+            {
+              "title": "没有存档时按F9应该显示提示",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 11992,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:02:49.540Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2eb20750cca024ec40f3-d43a26fcd2eda7e00a20",
+              "file": "save-load.spec.js",
+              "line": 206,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "scene-switching.spec.js",
+      "file": "scene-switching.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "场景切换测试",
+          "file": "scene-switching.spec.js",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "应该从小镇传送到森林",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 8271,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:03:01.540Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1d890438827d491c720a-469440f39dfad588d3f5",
+              "file": "scene-switching.spec.js",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "应该从森林传送到洞穴",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 11078,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"cave\"\u001b[39m\nReceived: \u001b[31m\"forest\"\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"cave\"\u001b[39m\nReceived: \u001b[31m\"forest\"\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js:67:26",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                          "column": 26,
+                          "line": 67
+                        },
+                        "snippet": "  65 |     });\n  66 |\n> 67 |     expect(currentScene).toBe('cave');\n     |                          ^\n  68 |\n  69 |     await page.screenshot({ path: 'test-results/screenshots/14-forest-to-cave.png' });\n  70 |   });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                            "column": 26,
+                            "line": 67
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"cave\"\u001b[39m\nReceived: \u001b[31m\"forest\"\u001b[39m\n\n  65 |     });\n  66 |\n> 67 |     expect(currentScene).toBe('cave');\n     |                          ^\n  68 |\n  69 |     await page.screenshot({ path: 'test-results/screenshots/14-forest-to-cave.png' });\n  70 |   });\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js:67:26"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:03:09.816Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-应该从森林传送到洞穴-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-应该从森林传送到洞穴-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-应该从森林传送到洞穴-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                        "column": 26,
+                        "line": 67
+                      }
+                    },
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 11550,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"cave\"\u001b[39m\nReceived: \u001b[31m\"forest\"\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"cave\"\u001b[39m\nReceived: \u001b[31m\"forest\"\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js:67:26",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                          "column": 26,
+                          "line": 67
+                        },
+                        "snippet": "  65 |     });\n  66 |\n> 67 |     expect(currentScene).toBe('cave');\n     |                          ^\n  68 |\n  69 |     await page.screenshot({ path: 'test-results/screenshots/14-forest-to-cave.png' });\n  70 |   });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                            "column": 26,
+                            "line": 67
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"cave\"\u001b[39m\nReceived: \u001b[31m\"forest\"\u001b[39m\n\n  65 |     });\n  66 |\n> 67 |     expect(currentScene).toBe('cave');\n     |                          ^\n  68 |\n  69 |     await page.screenshot({ path: 'test-results/screenshots/14-forest-to-cave.png' });\n  70 |   });\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js:67:26"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2026-01-24T11:03:21.216Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-应该从森林传送到洞穴-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-应该从森林传送到洞穴-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-应该从森林传送到洞穴-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-应该从森林传送到洞穴-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                        "column": 26,
+                        "line": 67
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1d890438827d491c720a-4665061a5cd66744155f",
+              "file": "scene-switching.spec.js",
+              "line": 43,
+              "column": 7
+            },
+            {
+              "title": "应该从洞穴传送回森林",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 16,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 10772,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"forest\"\u001b[39m\nReceived: \u001b[31m\"cave\"\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"forest\"\u001b[39m\nReceived: \u001b[31m\"cave\"\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js:96:26",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                          "column": 26,
+                          "line": 96
+                        },
+                        "snippet": "  94 |     });\n  95 |\n> 96 |     expect(currentScene).toBe('forest');\n     |                          ^\n  97 |\n  98 |     await page.screenshot({ path: 'test-results/screenshots/15-cave-to-forest.png' });\n  99 |   });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                            "column": 26,
+                            "line": 96
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"forest\"\u001b[39m\nReceived: \u001b[31m\"cave\"\u001b[39m\n\n  94 |     });\n  95 |\n> 96 |     expect(currentScene).toBe('forest');\n     |                          ^\n  97 |\n  98 |     await page.screenshot({ path: 'test-results/screenshots/15-cave-to-forest.png' });\n  99 |   });\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js:96:26"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:03:33.469Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-应该从洞穴传送回森林-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-应该从洞穴传送回森林-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-应该从洞穴传送回森林-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                        "column": 26,
+                        "line": 96
+                      }
+                    },
+                    {
+                      "workerIndex": 17,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 11681,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"forest\"\u001b[39m\nReceived: \u001b[31m\"cave\"\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"forest\"\u001b[39m\nReceived: \u001b[31m\"cave\"\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js:96:26",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                          "column": 26,
+                          "line": 96
+                        },
+                        "snippet": "  94 |     });\n  95 |\n> 96 |     expect(currentScene).toBe('forest');\n     |                          ^\n  97 |\n  98 |     await page.screenshot({ path: 'test-results/screenshots/15-cave-to-forest.png' });\n  99 |   });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                            "column": 26,
+                            "line": 96
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"forest\"\u001b[39m\nReceived: \u001b[31m\"cave\"\u001b[39m\n\n  94 |     });\n  95 |\n> 96 |     expect(currentScene).toBe('forest');\n     |                          ^\n  97 |\n  98 |     await page.screenshot({ path: 'test-results/screenshots/15-cave-to-forest.png' });\n  99 |   });\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js:96:26"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2026-01-24T11:03:44.593Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-应该从洞穴传送回森林-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-应该从洞穴传送回森林-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-应该从洞穴传送回森林-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-应该从洞穴传送回森林-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                        "column": 26,
+                        "line": 96
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1d890438827d491c720a-deefb311d92baaf5a8df",
+              "file": "scene-switching.spec.js",
+              "line": 72,
+              "column": 7
+            },
+            {
+              "title": "场景切换应该有淡入淡出效果",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 18,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 6319,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m2000\u001b[39m\nReceived:   \u001b[31m1004\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m2000\u001b[39m\nReceived:   \u001b[31m1004\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js:124:29",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                          "column": 29,
+                          "line": 124
+                        },
+                        "snippet": "  122 |\n  123 |     // 场景切换应该在合理时间内完成(2-4秒)\n> 124 |     expect(sceneSwitchTime).toBeGreaterThan(2000);\n      |                             ^\n  125 |     expect(sceneSwitchTime).toBeLessThan(5000);\n  126 |   });\n  127 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                            "column": 29,
+                            "line": 124
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m2000\u001b[39m\nReceived:   \u001b[31m1004\u001b[39m\n\n  122 |\n  123 |     // 场景切换应该在合理时间内完成(2-4秒)\n> 124 |     expect(sceneSwitchTime).toBeGreaterThan(2000);\n      |                             ^\n  125 |     expect(sceneSwitchTime).toBeLessThan(5000);\n  126 |   });\n  127 |\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js:124:29"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:03:56.700Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-场景切换应该有淡入淡出效果-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-场景切换应该有淡入淡出效果-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-场景切换应该有淡入淡出效果-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                        "column": 29,
+                        "line": 124
+                      }
+                    },
+                    {
+                      "workerIndex": 19,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 7833,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m2000\u001b[39m\nReceived:   \u001b[31m1005\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m2000\u001b[39m\nReceived:   \u001b[31m1005\u001b[39m\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js:124:29",
+                        "location": {
+                          "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                          "column": 29,
+                          "line": 124
+                        },
+                        "snippet": "  122 |\n  123 |     // 场景切换应该在合理时间内完成(2-4秒)\n> 124 |     expect(sceneSwitchTime).toBeGreaterThan(2000);\n      |                             ^\n  125 |     expect(sceneSwitchTime).toBeLessThan(5000);\n  126 |   });\n  127 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                            "column": 29,
+                            "line": 124
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m2000\u001b[39m\nReceived:   \u001b[31m1005\u001b[39m\n\n  122 |\n  123 |     // 场景切换应该在合理时间内完成(2-4秒)\n> 124 |     expect(sceneSwitchTime).toBeGreaterThan(2000);\n      |                             ^\n  125 |     expect(sceneSwitchTime).toBeLessThan(5000);\n  126 |   });\n  127 |\n    at /Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js:124:29"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2026-01-24T11:04:03.393Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-场景切换应该有淡入淡出效果-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-场景切换应该有淡入淡出效果-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-场景切换应该有淡入淡出效果-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/test-results/scene-switching-场景切换测试-场景切换应该有淡入淡出效果-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/zuojg/Downloads/AI/Code/forest-quest-rpg/tests/scene-switching.spec.js",
+                        "column": 29,
+                        "line": 124
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1d890438827d491c720a-74f7f9fa9ea8985c67f3",
+              "file": "scene-switching.spec.js",
+              "line": 101,
+              "column": 7
+            },
+            {
+              "title": "场景切换时玩家位置应该正确",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 20,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 8008,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:04:11.768Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1d890438827d491c720a-80175402ade684e62c0b",
+              "file": "scene-switching.spec.js",
+              "line": 128,
+              "column": 7
+            },
+            {
+              "title": "场景切换不应该丢失玩家对象",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 20,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 17053,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-24T11:04:19.869Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1d890438827d491c720a-0a38176c607cc1e742fa",
+              "file": "scene-switching.spec.js",
+              "line": 154,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-01-24T10:57:32.414Z",
+    "duration": 424536.098,
+    "expected": 29,
+    "skipped": 0,
+    "unexpected": 10,
+    "flaky": 0
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "forest-quest-rpg",
+  "version": "1.0.0",
+  "description": "Forest Quest RPG - 一款2D像素风格的动作RPG游戏",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:report": "playwright show-report",
+    "install:browsers": "playwright install chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "playwright": "^1.57.0"
+  }
+}

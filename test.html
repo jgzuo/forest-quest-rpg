@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forest Quest RPG - 自动化测试</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a2e;
+            color: #eee;
+            padding: 20px;
+            margin: 0;
+        }
+        #test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #68d391;
+            border-bottom: 2px solid #68d391;
+            padding-bottom: 10px;
+        }
+        .test-group {
+            background: #16213e;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #4facfe;
+        }
+        .test-group h2 {
+            margin-top: 0;
+            color: #4facfe;
+            font-size: 18px;
+        }
+        .test-item {
+            padding: 8px 15px;
+            margin: 5px 0;
+            background: #0f3460;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .test-item.pass {
+            border-left: 4px solid #68d391;
+        }
+        .test-item.fail {
+            border-left: 4px solid #ff6b6b;
+        }
+        .status-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        .test-name {
+            flex: 1;
+        }
+        .test-details {
+            color: #aaa;
+            font-size: 14px;
+        }
+        #summary {
+            background: #1e5128;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        #bug-report {
+            background: #7f1d1d;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+        #bug-report.show {
+            display: block;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #0f3460;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #68d391, #4facfe);
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        button {
+            background: #4facfe;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #3a9bd9;
+        }
+        #game-frame {
+            border: 2px solid #4facfe;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="test-container">
+        <h1>🎮 Forest Quest RPG - 自动化测试套件</h1>
+
+        <div id="controls">
+            <button onclick="startTest()">▶️ 开始测试</button>
+            <button onclick="loadGame()">📦 加载游戏</button>
+            <button onclick="runMovementTest()">🏃 移动测试</button>
+            <button onclick="checkPlayerCount()">🔍 检查玩家数量</button>
+            <button onclick="exportResults()">📄 导出结果</button>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress" style="width: 0%">0%</div>
+        </div>
+
+        <div id="summary" style="display: none;">
+            <h2>测试总结</h2>
+            <div id="summary-content"></div>
+        </div>
+
+        <div id="bug-report">
+            <h2>🐛 发现严重Bug！</h2>
+            <div id="bug-details"></div>
+        </div>
+
+        <div id="test-results"></div>
+
+        <iframe id="game-frame" width="800" height="650" style="display: none;"></iframe>
+    </div>
+
+    <script>
+        const testResults = {
+            total: 0,
+            passed: 0,
+            failed: 0,
+            tests: [],
+            startTime: null,
+            endTime: null
+        };
+
+        let gameWindow = null;
+        let gameDoc = null;
+
+        function log(message, isSubMessage = false) {
+            const consoleDiv = document.createElement('div');
+            consoleDiv.style.padding = isSubMessage ? '5px 0 5px 20px' : '10px 0';
+            consoleDiv.style.borderLeft = isSubMessage ? '2px solid #666' : '3px solid #4facfe';
+            consoleDiv.style.paddingLeft = '15px';
+            consoleDiv.style.margin = '5px 0';
+            consoleDiv.style.color = '#ccc';
+            consoleDiv.textContent = message;
+            document.getElementById('test-results').appendChild(consoleDiv);
+        }
+
+        function addTest(groupName, testName, passed, details = '') {
+            const group = document.getElementById(`group-${groupName}`) || createTestGroup(groupName);
+            const item = document.createElement('div');
+            item.className = `test-item ${passed ? 'pass' : 'fail'}`;
+            item.innerHTML = `
+                <span class="status-icon">${passed ? '✅' : '❌'}</span>
+                <span class="test-name">${testName}</span>
+                ${details ? `<span class="test-details">${details}</span>` : ''}
+            `;
+            group.appendChild(item);
+
+            testResults.total++;
+            if (passed) testResults.passed++;
+            else testResults.failed++;
+
+            testResults.tests.push({ group: groupName, name: testName, passed, details });
+            updateProgress();
+        }
+
+        function createTestGroup(groupName) {
+            const group = document.createElement('div');
+            group.className = 'test-group';
+            group.id = `group-${groupName}`;
+            group.innerHTML = `<h2>${groupName}</h2>`;
+            document.getElementById('test-results').appendChild(group);
+            return group;
+        }
+
+        function updateProgress() {
+            const total = testResults.total;
+            const passed = testResults.passed;
+            const percentage = total > 0 ? ((passed / total) * 100).toFixed(1) : 0;
+            document.getElementById('progress').style.width = `${percentage}%`;
+            document.getElementById('progress').textContent = `${percentage}%`;
+
+            document.getElementById('summary').style.display = 'block';
+            document.getElementById('summary-content').innerHTML = `
+                <p><strong>总测试:</strong> ${total}</p>
+                <p><strong>✅ 通过:</strong> ${passed}</p>
+                <p><strong>❌ 失败:</strong> ${testResults.failed}</p>
+                <p><strong>📈 通过率:</strong> ${percentage}%</p>
+            `;
+        }
+
+        async function loadGame() {
+            log('正在加载游戏...');
+            const iframe = document.getElementById('game-frame');
+            iframe.style.display = 'block';
+            iframe.src = 'http://127.0.0.1:55573/index.html';
+
+            return new Promise((resolve) => {
+                iframe.onload = () => {
+                    try {
+                        gameWindow = iframe.contentWindow;
+                        gameDoc = iframe.contentDocument;
+                        log('✅ 游戏加载成功');
+
+                        // 等待Phaser初始化
+                        setTimeout(() => {
+                            if (gameWindow.game) {
+                                log('✅ Phaser引擎已初始化');
+                                resolve(true);
+                            } else {
+                                log('❌ Phaser引擎未初始化');
+                                resolve(false);
+                            }
+                        }, 2000);
+                    } catch (e) {
+                        log(`❌ 加载失败: ${e.message}`);
+                        resolve(false);
+                    }
+                };
+            });
+        }
+
+        function checkPlayerCount() {
+            if (!gameWindow || !gameWindow.game) {
+                log('❌ 请先加载游戏');
+                return;
+            }
+
+            log('🔍 检查玩家对象数量...');
+
+            try {
+                const scene = gameWindow.game.scene.scenes[0];
+                if (!scene || !scene.player) {
+                    log('❌ 玩家对象不存在');
+                    addTest('玩家检查', '玩家对象存在', false);
+                    return;
+                }
+
+                // 计算玩家引用
+                let playerCount = 0;
+                let playerPosition = null;
+                scene.children.each((child) => {
+                    if (child === scene.player) {
+                        playerCount++;
+                        if (!playerPosition) {
+                            playerPosition = { x: child.x, y: child.y };
+                        }
+                    }
+                });
+
+                log(`📊 发现 ${playerCount} 个玩家对象引用`);
+                addTest('玩家检查', '玩家对象唯一', playerCount === 1,
+                    `发现 ${playerCount} 个引用`);
+
+                if (playerCount > 1) {
+                    showBugReport(playerCount);
+                } else {
+                    document.getElementById('bug-report').classList.remove('show');
+                }
+
+                // 检查玩家属性
+                if (scene.player) {
+                    addTest('玩家检查', '玩家有HP属性',
+                        typeof scene.player.hp === 'number',
+                        `HP: ${scene.player.hp}`);
+                    addTest('玩家检查', '玩家有速度属性',
+                        typeof scene.player.speed === 'number',
+                        `速度: ${scene.player.speed}`);
+                }
+
+            } catch (e) {
+                log(`❌ 检查失败: ${e.message}`);
+                addTest('玩家检查', '玩家数量检查', false, e.message);
+            }
+        }
+
+        function showBugReport(count) {
+            const report = document.getElementById('bug-report');
+            report.classList.add('show');
+            document.getElementById('bug-details').innerHTML = `
+                <p><strong>发现 ${count} 个玩家对象引用！</strong></p>
+                <p>这会导致移动时出现多个主角的问题。</p>
+                <h3>可能的原因:</h3>
+                <ul>
+                    <li>GameScene.create() 重复调用 createPlayer()</li>
+                    <li>SceneManager 切换场景时未正确清理旧玩家</li>
+                    <li>动画切换时错误创建了新精灵</li>
+                    <li>update() 函数中重复创建对象</li>
+                </ul>
+                <h3>建议修复:</h3>
+                <ol>
+                    <li>确保 createPlayer() 只被调用一次</li>
+                    <li>检查 cleanupScene() 是否正确保留玩家引用</li>
+                    <li>使用 setTexture() 而不是创建新精灵</li>
+                    <li>在 update() 中只修改属性，不创建新对象</li>
+                </ol>
+            `;
+        }
+
+        async function runMovementTest() {
+            if (!gameWindow || !gameWindow.game) {
+                log('❌ 请先加载游戏');
+                return;
+            }
+
+            log('🏃 开始移动测试...');
+
+            try {
+                const scene = gameWindow.game.scene.scenes[0];
+                if (!scene.player) {
+                    log('❌ 玩家不存在');
+                    return;
+                }
+
+                // 记录初始位置
+                const initialX = scene.player.x;
+                const initialY = scene.player.y;
+                log(`📍 初始位置: (${initialX}, ${initialY})`);
+
+                // 模拟键盘事件
+                const keyDownEvent = new KeyboardEvent('keydown', { key: 'w', keyCode: 87 });
+                const keyUpEvent = new KeyboardEvent('keyup', { key: 'w', keyCode: 87 });
+
+                gameWindow.dispatchEvent(keyDownEvent);
+
+                // 等待移动
+                await new Promise(r => setTimeout(r, 500));
+
+                gameWindow.dispatchEvent(keyUpEvent);
+
+                // 再等待物理更新
+                await new Promise(r => setTimeout(r, 200));
+
+                const newX = scene.player.x;
+                const newY = scene.player.y;
+                log(`📍 移动后位置: (${newX}, ${newY})`);
+
+                const moved = newY !== initialY;
+                addTest('移动测试', '玩家可以移动', moved,
+                    `从 ${initialY} 到 ${newY}`);
+
+                // 移动后再次检查玩家数量
+                checkPlayerCount();
+
+            } catch (e) {
+                log(`❌ 移动测试失败: ${e.message}`);
+                addTest('移动测试', '移动功能', false, e.message);
+            }
+        }
+
+        async function startTest() {
+            testResults.total = 0;
+            testResults.passed = 0;
+            testResults.failed = 0;
+            testResults.tests = [];
+            testResults.startTime = new Date();
+            document.getElementById('test-results').innerHTML = '';
+
+            log('🎮 开始自动化测试套件...');
+            log('='.repeat(60));
+
+            // 1. 加载游戏
+            log('\n📋 测试组1: 游戏加载');
+            const loaded = await loadGame();
+            addTest('游戏加载', '游戏成功加载', loaded);
+
+            await new Promise(r => setTimeout(r, 3000));
+
+            // 2. 检查Phaser
+            log('\n📋 测试组2: 引擎初始化');
+            if (gameWindow && gameWindow.game) {
+                addTest('引擎检查', 'Phaser实例存在', true);
+                addTest('引擎检查', '场景已创建',
+                    gameWindow.game.scene.scenes.length > 0,
+                    `${gameWindow.game.scene.scenes.length} 个场景`);
+
+                // 3. 检查纹理
+                log('\n📋 测试组3: 资源加载');
+                const textures = [];
+                gameWindow.game.textures.each((tex, key) => textures.push(key));
+
+                const requiredTextures = [
+                    'hero-idle-front',
+                    'mole-idle-front',
+                    'treant-idle-front',
+                    'gem',
+                    'coin'
+                ];
+
+                requiredTextures.forEach(tex => {
+                    const exists = textures.includes(tex);
+                    addTest('资源检查', `纹理 ${tex}`, exists);
+                });
+
+                // 4. 检查玩家
+                log('\n📋 测试组4: 玩家对象');
+                checkPlayerCount();
+
+                // 5. 检查场景对象
+                log('\n📋 测试组5: 场景对象');
+                const scene = gameWindow.game.scene.scenes[0];
+                let npcCount = 0;
+                let chestCount = 0;
+                let enemyCount = 0;
+
+                scene.children.each((child) => {
+                    const type = child.getData && child.getData('type');
+                    if (type === 'npc') npcCount++;
+                    if (type === 'chest') chestCount++;
+                    if (child.texture && child.texture.key.includes('mole')) enemyCount++;
+                    if (child.texture && child.texture.key.includes('treant')) enemyCount++;
+                });
+
+                addTest('场景对象', 'NPC存在', npcCount > 0, `${npcCount} 个NPC`);
+                addTest('场景对象', '宝箱存在', chestCount > 0, `${chestCount} 个宝箱`);
+                addTest('场景对象', '敌人存在', enemyCount > 0, `${enemyCount} 个敌人`);
+
+                // 6. 检查管理器
+                log('\n📋 测试组6: 系统组件');
+                addTest('组件检查', 'SaveManager存在', !!scene.saveManager);
+                addTest('组件检查', 'SceneManager存在', !!scene.sceneManager);
+                addTest('组件检查', 'ShopManager存在', !!scene.shopManager);
+                addTest('组件检查', '敌人组存在', !!scene.enemies);
+
+                // 7. 移动测试
+                log('\n📋 测试组7: 玩家移动');
+                await runMovementTest();
+
+            } else {
+                addTest('引擎检查', 'Phaser实例存在', false);
+            }
+
+            testResults.endTime = new Date();
+            const duration = ((testResults.endTime - testResults.startTime) / 1000).toFixed(2);
+            log(`\n✅ 测试完成！耗时: ${duration}秒`);
+            log('='.repeat(60));
+        }
+
+        function exportResults() {
+            const dataStr = JSON.stringify(testResults, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+
+            const exportFileDefaultName = `test_results_${new Date().getTime()}.json`;
+
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+
+        // 页面加载完成后提示
+        window.onload = () => {
+            log('🎮 测试套件已就绪');
+            log('💡 点击"开始测试"按钮开始自动化测试');
+            log('💡 或者分步骤执行: 加载游戏 → 检查玩家 → 移动测试');
+        };
+    </script>
+</body>
+</html>

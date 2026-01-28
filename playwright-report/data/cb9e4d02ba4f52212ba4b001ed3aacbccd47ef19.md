@@ -1,0 +1,37 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - heading "🌲 Forest Quest RPG" [level=1] [ref=e4]
+    - paragraph [ref=e5]: 森林探险 - 一款2D像素风格的动作RPG
+  - generic [ref=e6]:
+    - generic [ref=e7]: 游戏加载中...
+    - generic:
+      - generic: "❤️ 生命: 95/100"
+      - generic: "⭐ 经验: 0/100"
+      - generic: Lv. 1
+      - generic: "💰 金币: 100"
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - heading "移动控制" [level=3] [ref=e11]
+      - text: WASD 或 ↑↓←→
+    - generic [ref=e12]:
+      - heading "战斗操作" [level=3] [ref=e13]
+      - text: 空格 攻击 | E 交互
+    - generic [ref=e14]:
+      - heading "任务" [level=3] [ref=e15]
+      - text: Q 任务日志 | E 接取任务
+    - generic [ref=e16]:
+      - heading "系统" [level=3] [ref=e17]
+      - text: F5 快速保存 | F9 快速加载
+  - contentinfo [ref=e18]:
+    - paragraph [ref=e19]:
+      - text: 使用键盘控制角色，探索森林，击败敌人，拯救森林！
+      - link "GitHub" [ref=e20] [cursor=pointer]:
+        - /url: https://github.com/zuojg
+      - text: "| Author: Jianguang ZUO ("
+      - link "zuojg@msn.com" [ref=e21] [cursor=pointer]:
+        - /url: mailto:zuojg@msn.com
+      - text: )
+```

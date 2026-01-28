@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>修复验证 - Forest Quest RPG</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 900px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-top: 0;
+        }
+        .status {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 18px;
+        }
+        .status.pending {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+        }
+        .status.success {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+        }
+        .status.error {
+            background: #f8d7da;
+            border-left: 5px solid #dc3545;
+        }
+        .step {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        kbd {
+            background: #212529;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 10px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .button:hover {
+            transform: scale(1.05);
+        }
+        iframe {
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            width: 100%;
+            height: 650px;
+        }
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .checklist li::before {
+            content: "☐ ";
+            color: #667eea;
+            font-size: 20px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Forest Quest RPG - 修复验证</h1>
+
+        <div class="status pending" id="version-status">
+            <strong>⏳ 等待检测版本...</strong>
+            <p>请在下方iframe中加载游戏，系统会自动检测版本</p>
+        </div>
+
+        <div class="step">
+            <h3>步骤1: 强制刷新浏览器</h3>
+            <p>这是<strong>最重要</strong>的一步！普通刷新不会清除缓存。</p>
+            <p><strong>Windows/Linux:</strong> <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd></p>
+            <p><strong>Mac:</strong> <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd></p>
+        </div>
+
+        <div class="step">
+            <h3>步骤2: 加载游戏并检查版本</h3>
+            <p>点击下面的按钮加载游戏，然后打开浏览器控制台（按 <kbd>F12</kbd>）检查版本号</p>
+            <a href="http://127.0.0.1:55573/index.html" target="_blank" class="button">🎮 在新标签页打开游戏</a>
+            <p><strong>或者在下方iframe中查看：</strong></p>
+            <button class="button" onclick="loadGame()">📦 在iframe中加载游戏</button>
+            <br><br>
+            <iframe id="game-frame" src="about:blank"></iframe>
+        </div>
+
+        <div class="step">
+            <h3>步骤3: 检查控制台输出</h3>
+            <p>打开控制台后，应该看到：</p>
+            <pre style="background: #e9ecef; padding: 15px; border-radius: 8px;">
+🎮 GameScene 初始化 v2.0
+👤 玩家创建完成 v2.0</pre>
+            <p>如果看到 <strong>v2.0</strong>，说明新代码已加载！</p>
+        </div>
+
+        <div class="step">
+            <h3>步骤4: 测试移动</h3>
+            <ul class="checklist">
+                <li>按 <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> 移动角色</li>
+                <li>观察屏幕上是否只有<strong>1个</strong>主角</li>
+                <li>停止按键，确认还是<strong>1个</strong>主角</li>
+                <li>测试所有方向：上、下、左、右</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3>步骤5: 诊断代码</h3>
+            <p>如果问题仍存在，在控制台粘贴以下代码诊断：</p>
+            <pre style="background: #e9ecef; padding: 15px; border-radius: 8px; overflow-x: auto;">
+const scene = game.scene.scenes.find(s => s.scene.key === 'GameScene');
+let count = 0;
+scene.children.each(c => {
+    if (c.texture?.key?.startsWith('hero')) count++;
+});
+console.log('Hero对象数量:', count);
+console.log('玩家位置:', { x: scene.player.x, y: scene.player.y });
+console.log('flipX:', scene.player.flipX);
+console.log('纹理:', scene.player.texture.key);</pre>
+            <p>应该输出 Hero对象数量: <strong>1</strong></p>
+        </div>
+
+        <div class="status error" id="troubleshooting">
+            <h3>🔧 问题排查</h3>
+            <p><strong>如果控制台显示的不是v2.0：</strong></p>
+            <ol>
+                <li>再次强制刷新：<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd></li>
+                <li>清除浏览器缓存：设置 → 隐私 → 清除浏览数据</li>
+                <li>或使用隐私/无痕模式测试</li>
+            </ol>
+            <p><strong>如果v2.0但仍有多个主角：</strong></p>
+            <ol>
+                <li>检查是否是显示器残影（固定位置观察）</li>
+                <li>尝试其他浏览器（Chrome, Firefox, Edge）</li>
+                <li>提供控制台诊断输出</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function loadGame() {
+            const iframe = document.getElementById('game-frame');
+            iframe.src = 'http://127.0.0.1:55573/index.html';
+
+            setTimeout(() => {
+                try {
+                    const gameWindow = iframe.contentWindow;
+                    const consoleOutput = gameWindow.console;
+
+                    document.getElementById('version-status').className = 'status success';
+                    document.getElementById('version-status').innerHTML = `
+                        <strong>✅ 游戏已加载</strong>
+                        <p>请打开iframe的控制台检查版本号</p>
+                        <p>应该看到: "🎮 GameScene 初始化 v2.0"</p>
+                    `;
+                } catch (e) {
+                    document.getElementById('version-status').className = 'status error';
+                    document.getElementById('version-status').innerHTML = `
+                        <strong>❌ 无法访问iframe内容</strong>
+                        <p>请直接在新标签页打开游戏并检查</p>
+                    `;
+                }
+            }, 3000);
+        }
+
+        // 页面加载后的提示
+        window.onload = () => {
+            console.log('%c🎮 Forest Quest RPG - 修复验证页面', 'font-size: 20px; color: #667eea;');
+            console.log('%c请按照页面上的步骤验证修复是否生效', 'font-size: 14px;');
+            console.log('%c重点：强制刷新浏览器 (Ctrl+Shift+R)', 'font-size: 14px; color: #ff6b6b;');
+        };
+    </script>
+</body>
+</html>

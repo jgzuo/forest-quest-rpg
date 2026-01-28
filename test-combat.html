@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forest Quest RPG - Combat Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .test-section {
+            background: #2a2a2a;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4facfe;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .pass { background: #225522; }
+        .fail { background: #552222; }
+        .info { background: #223355; }
+        h1 { color: #4facfe; }
+        h2 { color: #68d391; margin-top: 0; }
+        code {
+            background: #1a1a1a;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .instructions {
+            background: #334455;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎮 Forest Quest RPG - Combat System Test</h1>
+
+    <div class="instructions">
+        <h2>测试说明 / Test Instructions</h2>
+        <ol>
+            <li>Open the game in browser: <a href="http://localhost:8080" target="_blank" style="color: #4facfe;">http://localhost:8080</a></li>
+            <li>Open browser console (F12)</li>
+            <li>Move player to forest scene</li>
+            <li>Run the tests below in console</li>
+            <li>Observe results</li>
+        </ol>
+        <p><strong>Expected:</strong> 8 enemies spawn (5 moles + 3 treants), player can attack them, enemies track player</p>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 1: Check Enemy Spawning</h2>
+        <p>Run in console:</p>
+        <code>
+            const scene = window.game.scene.scenes.find(s => s.scene.key === 'GameScene');<br>
+            const enemies = scene.sceneManager?.enemies || scene.enemies;<br>
+            console.log('Enemies count:', enemies ? enemies.getChildren().length : 0);<br>
+            console.log('Enemies:', enemies ? enemies.getChildren() : 'No enemies group');
+        </code>
+        <div id="test1-result" class="test-result info">Waiting for test...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Check Enemy Data</h2>
+        <p>Run in console:</p>
+        <code>
+            const scene = window.game.scene.scenes.find(s => s.scene.key === 'GameScene');<br>
+            const enemies = scene.sceneManager?.enemies || scene.enemies;<br>
+            if (enemies && enemies.getChildren().length > 0) {<br>
+            &nbsp;&nbsp;const enemy = enemies.getChildren()[0];<br>
+            &nbsp;&nbsp;console.log('Enemy HP:', enemy.getData('hp'));<br>
+            &nbsp;&nbsp;console.log('Enemy Max HP:', enemy.getData('maxHp'));<br>
+            &nbsp;&nbsp;console.log('Enemy Attack:', enemy.getData('attack'));<br>
+            &nbsp;&nbsp;console.log('Enemy Speed:', enemy.getData('speed'));<br>
+            } else {<br>
+            &nbsp;&nbsp;console.log('No enemies found!');<br>
+            }
+        </code>
+        <div id="test2-result" class="test-result info">Waiting for test...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Test Player Attack</h2>
+        <p>Run in console:</p>
+        <code>
+            const scene = window.game.scene.scenes.find(s => s.scene.key === 'GameScene');<br>
+            // Simulate spacebar press<br>
+            const spaceEvent = new KeyboardEvent('keydown', { code: 'Space' });<br>
+            window.dispatchEvent(spaceEvent);<br>
+            console.log('Attack triggered! Check if enemy takes damage.');
+        </code>
+        <div id="test3-result" class="test-result info">Waiting for test...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: Check HP Bars</h2>
+        <p>Run in console:</p>
+        <code>
+            const scene = window.game.scene.scenes.find(s => s.scene.key === 'GameScene');<br>
+            const enemies = scene.sceneManager?.enemies || scene.enemies;<br>
+            if (enemies) {<br>
+            &nbsp;&nbsp;enemies.getChildren().forEach(enemy => {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;console.log('Enemy HP Bar:', enemy.hpBar ? 'Exists' : 'Missing');<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;console.log('Enemy HP Bar BG:', enemy.hpBarBg ? 'Exists' : 'Missing');<br>
+            &nbsp;&nbsp;});<br>
+            }
+        </code>
+        <div id="test4-result" class="test-result info">Waiting for test...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 5: Force Enemy Damage (Debug)</h2>
+        <p>Run in console to manually damage enemy:</p>
+        <code>
+            const scene = window.game.scene.scenes.find(s => s.scene.key === 'GameScene');<br>
+            const enemies = scene.sceneManager?.enemies || scene.enemies;<br>
+            if (enemies && enemies.getChildren().length > 0) {<br>
+            &nbsp;&nbsp;const enemy = enemies.getChildren()[0];<br>
+            &nbsp;&nbsp;scene.hitEnemy(enemy);<br>
+            &nbsp;&nbsp;console.log('Damaged enemy! Current HP:', enemy.getData('hp'));<br>
+            }
+        </code>
+        <div id="test5-result" class="test-result info">Waiting for test...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 6: Spawn Enemies Manually</h2>
+        <p>If enemies didn't spawn, run this:</p>
+        <code>
+            const scene = window.game.scene.scenes.find(s => s.scene.key === 'GameScene');<br>
+            scene.sceneManager.spawnEnemiesInForest();<br>
+            console.log('Enemies spawned!');
+        </code>
+        <div id="test6-result" class="test-result info">Waiting for test...</div>
+    </div>
+
+    <script>
+        // Auto-update test results based on console output
+        // This is a helper - users need to manually check the browser console
+        console.log('%c=== Combat System Test Suite ===', 'color: #4facfe; font-size: 16px; font-weight: bold;');
+        console.log('%cFollow the test cases above in order', 'color: #68d391;');
+        console.log('%cCopy each code block and run it in the console', 'color: #ffd700;');
+    </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NPC Image Check</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .image-info {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #4facfe;
+        }
+        .image-display {
+            margin: 20px 0;
+            text-align: center;
+        }
+        img {
+            border: 2px solid #ddd;
+            image-rendering: pixelated;  /* 像素风格 */
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .grid-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 NPC图片检查</h1>
+
+        <div class="image-info">
+            <h2>图片信息</h2>
+            <p>文件: <code>assets/characters/npc.png</code></p>
+            <p>尺寸: 48 x 64 像素</p>
+        </div>
+
+        <div class="image-display">
+            <h2>原始图片 (完整显示)</h2>
+            <img src="assets/characters/npc.png" alt="NPC Original" style="width: 144px; height: 192px;">
+        </div>
+
+        <div class="image-display">
+            <h2>可能的spritesheet结构分析</h2>
+            <div class="grid">
+                <div class="grid-item">
+                    <h3>假设1: 3列1行 (16x64每帧)</h3>
+                    <div style="display: flex; justify-content: center; gap: 10px;">
+                        <img src="assets/characters/npc.png" style="width: 48px; height: 192px; object-position: 0 0;" alt="Frame 1">
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <h3>假设2: 1列2行 (48x32每帧)</h3>
+                    <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+                        <img src="assets/characters/npc.png" style="width: 96px; height: 64px; object-position: 0 0;" alt="Frame 1 Top">
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <h3>假设3: 3列2行 (16x32每帧)</h3>
+                    <p>最可能的spritesheet结构</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>假设4: 单个完整图片</h3>
+                    <p>如果不是spritesheet，这就是完整的NPC图片</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="image-info">
+            <h2>建议</h2>
+            <p><strong>如果图片包含多个方向：</strong></p>
+            <ul>
+                <li>需要修改代码使用 spritesheet 加载</li>
+                <li>或者只显示图片的一部分（第一帧）</li>
+            </ul>
+            <p><strong>如果图片是单个角色：</strong></p>
+            <ul>
+                <li>当前代码正确，但显示效果可能不理想</li>
+                <li>可能需要替换为更合适的NPC图片</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

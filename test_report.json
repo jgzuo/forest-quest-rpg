@@ -1,0 +1,71 @@
+{
+  "timestamp": "2026-01-23T02:33:00.199Z",
+  "initialState": {
+    "heroCount": 1,
+    "heroInfo": [
+      {
+        "key": "hero-idle-front",
+        "x": 400,
+        "y": 300,
+        "visible": true,
+        "active": true,
+        "depth": 0,
+        "isPlayer": true,
+        "flipX": false
+      }
+    ],
+    "playerExists": true,
+    "playerPosition": {
+      "x": 400,
+      "y": 300
+    },
+    "currentTextureKey": "hero-idle-front",
+    "currentFlipX": false
+  },
+  "keyDownState": {
+    "heroCount": 1,
+    "heroInfo": [
+      {
+        "key": "hero-idle-front",
+        "x": 400,
+        "y": 300,
+        "visible": true,
+        "active": true,
+        "depth": 0,
+        "isPlayer": true,
+        "flipX": false
+      }
+    ],
+    "playerPosition": {
+      "x": 400,
+      "y": 300
+    },
+    "currentTextureKey": "hero-idle-front",
+    "currentFlipX": false,
+    "hasFlipXInUpdate": true,
+    "updateLength": 2941
+  },
+  "deepDiagnostic": {
+    "sceneCount": 2,
+    "sceneKeys": [
+      "BootScene",
+      "GameScene"
+    ],
+    "gameCanvasCount": 1,
+    "allCanvasInfo": [
+      {
+        "index": 0,
+        "width": 800,
+        "height": 600,
+        "display": "block",
+        "position": "static"
+      }
+    ]
+  },
+  "bugDetected": false,
+  "analysis": {
+    "heroCountIncreased": false,
+    "initialMultipleHeroes": false,
+    "keyDownMultipleHeroes": false
+  }
+}

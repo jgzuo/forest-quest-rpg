@@ -1,0 +1,1773 @@
+/**
+ * GameScene - 主游戏场景
+ * 包含游戏的核心逻辑：玩家控制、场景管理、战斗系统等
+ * @version 2.1 - 修复场景切换频闪 + 添加渲染缓存更新
+ */
+class GameScene extends Phaser.Scene {
+    constructor() {
+        super({ key: 'GameScene' });
+    }
+
+    create() {
+        console.log('🎮 GameScene 初始化 v2.2 (支持精灵动画)');
+
+        // ============ 性能优化：缓存DOM元素 ============
+        this.cachedDOMElements = {
+            levelText: null,
+            goldText: null,
+            hpBar: null,
+            hpBarFill: null,
+            xpBar: null,
+            xpBarFill: null
+        };
+
+        // ============ 初始化统计追踪 ============
+        // 记录本次会话开始时间
+        if (window.gameData && window.gameData.progress) {
+            window.gameData.progress.sessionStartTime = Date.now();
+            window.gameData.progress.lastPlaytimeUpdate = Date.now(); // 用于节流
+            console.log('⏱️ 统计追踪已启动');
+        }
+
+        // ============ 初始化存档管理器 ============
+        this.saveManager = new SaveManager(this);
+
+        // ============ 初始化商店管理器 ============
+        this.shopManager = new ShopManager(this);
+
+        // ============ 初始化任务管理器 ============
+        this.questManager = new QuestManager(this);
+
+        // 设置任务事件监听
+        this.setupQuestEvents();
+
+        // ============ 初始化音频管理器 ============
+        this.audioManager = new AudioManager(this);
+
+        // ============ 初始化成就管理器 ============
+        this.achievementManager = new AchievementManager(this);
+        this.achievementManager.loadAchievements();
+
+        // ============ 检查是否存在存档 ============
+        this.checkSaveData();
+
+        // ============ 初始化场景管理器 ============
+        this.sceneManager = new SceneManager(this);
+
+        // ============ 创建玩家动画 ============
+        this.createPlayerAnimations();
+
+        // ============ 创建玩家 ============
+        this.createPlayer();
+
+        // ============ 加载初始场景（小镇）============
+        this.sceneManager.loadScene('town');
+
+        // ============ 设置键盘输入 ============
+        this.setupControls();
+
+        // ============ 初始化UI ============
+        this.initUI();
+
+        // ============ 显示欢迎消息 ============
+        this.showWelcomeMessage();
+
+        console.log('✅ GameScene 创建完成 v2.2');
+    }
+
+    createPlayerAnimations() {
+        // 向前走动画
+        this.anims.create({
+            key: 'walk-front',
+            frames: this.anims.generateFrameNumbers('hero-walk-front', { start: 0, end: 5 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        // 向后走动画
+        this.anims.create({
+            key: 'walk-back',
+            frames: this.anims.generateFrameNumbers('hero-walk-back', { start: 0, end: 5 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        // 侧面走动画
+        this.anims.create({
+            key: 'walk-side',
+            frames: this.anims.generateFrameNumbers('hero-walk-side', { start: 0, end: 5 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        // 向前攻击动画
+        this.anims.create({
+            key: 'attack-front',
+            frames: this.anims.generateFrameNumbers('hero-attack-front', { start: 0, end: 2 }),
+            frameRate: 15,  // 攻击动画稍快
+            repeat: 0       // 只播放一次
+        });
+
+        // 向后攻击动画
+        this.anims.create({
+            key: 'attack-back',
+            frames: this.anims.generateFrameNumbers('hero-attack-back', { start: 0, end: 2 }),
+            frameRate: 15,
+            repeat: 0
+        });
+
+        // 侧面攻击动画
+        this.anims.create({
+            key: 'attack-side',
+            frames: this.anims.generateFrameNumbers('hero-attack-side', { start: 0, end: 2 }),
+            frameRate: 15,
+            repeat: 0
+        });
+    }
+
+    createPlayer() {
+        // 创建玩家精灵
+        this.player = this.physics.add.sprite(400, 300, 'hero-idle-front');
+        this.player.setScale(3);
+        this.player.setCollideWorldBounds(true);
+
+        // 玩家属性
+        this.player.hp = 100;
+        this.player.maxHp = 100;
+        this.player.xp = 0;
+        this.player.level = 1;
+        this.player.xpToNextLevel = 100;
+        this.player.attack = 20;  // 攻击力翻倍（从10改为20）
+        this.player.speed = 150;
+        this.player.gold = 100;  // 初始金币100
+
+        // 玩家状态
+        this.player.isAttacking = false;
+        this.player.facing = 'front';
+        this.player.lastDirection = 'down';
+        this.player.currentAnimation = null;  // 改为追踪动画而不是纹理
+
+        console.log('👤 玩家创建完成 v2.2 (动画系统)');
+    }
+
+    setupControls() {
+        // 创建光标键
+        this.cursors = this.input.keyboard.createCursorKeys();
+
+        // 创建WASD键
+        this.wasd = this.input.keyboard.addKeys({
+            up: Phaser.Input.Keyboard.KeyCodes.W,
+            down: Phaser.Input.Keyboard.KeyCodes.S,
+            left: Phaser.Input.Keyboard.KeyCodes.A,
+            right: Phaser.Input.Keyboard.KeyCodes.D,
+            space: Phaser.Input.Keyboard.KeyCodes.SPACE,
+            interact: Phaser.Input.Keyboard.KeyCodes.E
+        });
+
+        // 攻击键
+        this.wasd.space.on('down', () => {
+            this.playerAttack();
+        });
+
+        // 交互键
+        this.wasd.interact.on('down', () => {
+            this.handleInteraction();
+        });
+
+        // 快速保存键 (F5)
+        this.input.keyboard.on('keydown-F5', () => {
+            this.quickSave();
+        });
+
+        // 快速加载键 (F9)
+        this.input.keyboard.on('keydown-F9', () => {
+            this.quickLoad();
+        });
+
+        console.log('⌨️ 键盘控制设置完成');
+    }
+
+    setupQuestEvents() {
+        // 监听任务开始事件
+        this.events.on('questStarted', (quest) => {
+            console.log(`📜 任务开始: ${quest.name}`);
+            this.showFloatingText(
+                this.player.x,
+                this.player.y - 60,
+                `新任务: ${quest.name}`,
+                '#68d391'
+            );
+            // 刷新任务UI
+            this.refreshQuestUI();
+        });
+
+        // 监听任务更新事件
+        this.events.on('questUpdated', (quest) => {
+            const objective = quest.getCurrentObjective();
+            if (objective) {
+                console.log(`📊 ${quest.name}: ${objective.description} (${objective.current}/${objective.required})`);
+            }
+            // 刷新任务追踪器
+            this.refreshQuestTracker();
+        });
+
+        // 监听任务目标完成事件
+        this.events.on('questObjectiveCompleted', (quest) => {
+            console.log(`✨ 任务目标完成: ${quest.name}`);
+            this.showFloatingText(
+                this.player.x,
+                this.player.y - 60,
+                `目标完成!`,
+                '#ffd700'
+            );
+            // 刷新任务UI
+            this.refreshQuestUI();
+        });
+
+        // 监听任务完成事件
+        this.events.on('questCompleted', (quest) => {
+            console.log(`🎉 任务完成: ${quest.name}`);
+            this.showFloatingText(
+                400,
+                300,
+                `任务完成: ${quest.name}!`,
+                '#ffd700',
+                3000
+            );
+            // 刷新任务UI
+            this.refreshQuestUI();
+
+            // 如果任务日志打开，刷新它
+            if (this.questLogPanel && this.questLogPanel.isOpen) {
+                this.questLogPanel.refresh();
+            }
+        });
+
+        // 监听Boss击败事件
+        this.events.on('bossDefeated', (bossType) => {
+            console.log(`👑 Boss被击败: ${bossType}`);
+
+            // 更新任务目标
+            if (this.questManager && bossType) {
+                this.questManager.onBossDefeated(bossType);
+            }
+        });
+
+        console.log('📜 任务事件监听器设置完成');
+    }
+
+    refreshQuestUI() {
+        // 刷新任务追踪器
+        this.refreshQuestTracker();
+
+        // 如果任务日志打开，刷新它
+        if (this.questLogPanel && this.questLogPanel.isOpen) {
+            this.questLogPanel.refresh();
+        }
+    }
+
+    refreshQuestTracker() {
+        if (this.questTracker && this.questManager) {
+            const activeQuests = this.questManager.getActiveQuests();
+            this.questTracker.update(activeQuests);
+        }
+    }
+
+    handleInteraction() {
+        const playerX = this.player.x;
+        const playerY = this.player.y;
+
+        // 找到距离玩家最近的NPC
+        let closestNPC = null;
+        let closestDistance = Infinity;
+
+        this.children.each((child) => {
+            // 确保是NPC对象且有name属性（排除hint、interactionZone等）
+            if (child.getData && child.getData('type') === 'npc' && child.getData('name')) {
+                const distance = Phaser.Math.Distance.Between(
+                    playerX, playerY,
+                    child.x, child.y
+                );
+
+                if (distance < 60 && distance < closestDistance) {
+                    closestDistance = distance;
+                    closestNPC = child;
+                }
+            }
+        });
+
+        // 只与最近的NPC对话
+        if (closestNPC) {
+            this.talkToNPC(closestNPC);
+        }
+
+        // 检查附近的宝箱（如果有）
+        this.children.each((child) => {
+            if (child.getData && child.getData('type') === 'chest') {
+                const distance = Phaser.Math.Distance.Between(
+                    playerX, playerY,
+                    child.x, child.y
+                );
+
+                if (distance < 60 && !child.getData('opened')) {
+                    this.openChest(child);
+                }
+            }
+        });
+    }
+
+    talkToNPC(npc) {
+        const npcName = npc.getData('name');
+        const npcId = npc.getData('id');
+        const currentScene = this.sceneManager.getCurrentScene();
+
+        let message = '';
+
+        if (npcName === '村长') {
+            if (currentScene === 'town') {
+                // 检查任务状态
+                const quest1 = this.questManager.getQuest('quest_1_moles');
+                const quest2 = this.questManager.getQuest('quest_2_gems');
+                const quest4 = this.questManager.getQuest('quest_4_slime_hunter');
+                const quest5 = this.questManager.getQuest('quest_5_blade_guardian');
+
+                // 构建对话消息
+                message = '村长：欢迎来到小镇，年轻的冒险者！\n\n';
+
+                // 任务1信息
+                if (quest1.status === 'not_started') {
+                    message += '📜 [可接取] 鼹鼠威胁\n  森林里的鼹鼠太多了，请击败10只鼹鼠！\n\n';
+                } else if (quest1.status === 'in_progress') {
+                    const obj = quest1.getCurrentObjective();
+                    message += '📜 [进行中] 鼹鼠威胁\n  进度: ' + obj.current + '/' + obj.required + '\n\n';
+                } else if (quest1.status === 'completed') {
+                    message += '✅ [已完成] 鼹鼠威胁\n\n';
+                }
+
+                // 任务2信息
+                if (quest2.status === 'not_started') {
+                    message += '💎 [可接取] 宝石收集\n  收集3颗神秘宝石，奖励丰厚！\n\n';
+                } else if (quest2.status === 'in_progress') {
+                    const obj = quest2.getCurrentObjective();
+                    message += '💎 [进行中] 宝石收集\n  进度: ' + obj.current + '/' + obj.required + '\n\n';
+                } else if (quest2.status === 'completed') {
+                    message += '✅ [已完成] 宝石收集\n\n';
+                }
+
+                // Milestone 6 - 新任务信息
+
+                // 任务4: 史莱姆狩猎 (需要完成任务1)
+                if (quest4) {
+                    const prereqMet = quest1.status === 'completed';
+                    if (quest4.status === 'not_started') {
+                        if (prereqMet) {
+                            message += '🦠 [可接取] 史莱姆狩猎\n  洞穴里的史莱姆太多了，击败5只史莱姆！\n  奖励: 50金币, 30XP\n\n';
+                        } else {
+                            message += '🔒 [锁定] 史莱姆狩猎\n  需要完成: 鼹鼠威胁\n\n';
+                        }
+                    } else if (quest4.status === 'in_progress') {
+                        const obj = quest4.getCurrentObjective();
+                        message += '🦠 [进行中] 史莱姆狩猎\n  进度: ' + obj.current + '/' + obj.required + '\n\n';
+                    } else if (quest4.status === 'completed') {
+                        message += '✅ [已完成] 史莱姆狩猎\n\n';
+                    }
+                }
+
+                // 任务5: 守护者之刃 (需要完成任务1)
+                if (quest5) {
+                    const prereqMet = quest1.status === 'completed';
+                    if (quest5.status === 'not_started') {
+                        if (prereqMet) {
+                            message += '⚔️ [可接取] 守护者之刃\n  寻找3把古代武器碎片，重新铸造传奇之剑！\n  奖励: 守护者之剑(ATK+5), 75金币, 100XP\n\n';
+                        } else {
+                            message += '🔒 [锁定] 守护者之刃\n  需要完成: 鼹鼠威胁\n\n';
+                        }
+                    } else if (quest5.status === 'in_progress') {
+                        const obj = quest5.getCurrentObjective();
+                        message += '⚔️ [进行中] 守护者之刃\n  进度: ' + obj.current + '/' + obj.required + '\n\n';
+                    } else if (quest5.status === 'completed') {
+                        message += '✅ [已完成] 守护者之刃\n\n';
+                    }
+                }
+
+                message += '提示：按Q键查看任务日志\n\n按E键继续对话接取任务';
+
+                // 显示对话并添加选项
+                this.showQuestDialog(npcName, message, npcId);
+                return;
+            }
+        } else if (npcName === '商人') {
+            // 打开商店并添加新任务
+            const quest6 = this.questManager.getQuest('quest_6_lost_cargo');
+
+            let shopMessage = '商人：欢迎光临！想买点什么吗？\n\n';
+
+            // Milestone 6 - 任务6: 失落的货物
+            if (quest6) {
+                if (quest6.status === 'not_started') {
+                    shopMessage += '📦 [可接取] 失落的货物\n  我的马车遇袭了！请帮我找回3个货物箱子。\n  奖励: 200金币, 商人优惠券, 50XP\n\n';
+                } else if (quest6.status === 'in_progress') {
+                    const obj = quest6.getCurrentObjective();
+                    shopMessage += `📦 [进行中] 失落的货物\n  进度: ${obj.current}/${obj.required}\n\n`;
+                } else if (quest6.status === 'completed') {
+                    shopMessage += '✅ [已完成] 失落的货物\n谢谢你的帮助！\n\n';
+                }
+            }
+
+            // 打开商店
+            if (this.shopManager) {
+                this.shopManager.openShop('商人');
+            }
+            return;
+        }
+
+        if (message) {
+            this.showDialog(npcName, message);
+        }
+    }
+
+    showDialog(speaker, message) {
+        // 创建对话框背景
+        const dialogBg = this.add.rectangle(400, 500, 700, 150, 0x222222);
+        dialogBg.setStrokeStyle(3, 0x667eea);
+        dialogBg.setDepth(100);
+
+        // 创建对话框文字
+        const dialogText = this.add.text(100, 420, message, {
+            font: '16px Noto Sans SC',
+            fill: '#ffffff',
+            wordWrap: { width: 650 }
+        });
+        dialogText.setDepth(101);
+
+        // 创建说话者名称
+        const speakerText = this.add.text(100, 400, speaker, {
+            font: 'bold 18px Noto Sans SC',
+            fill: '#667eea'
+        });
+        speakerText.setDepth(101);
+
+        // 创建关闭提示
+        const closeHint = this.add.text(700, 530, '按任意键关闭', {
+            font: '14px Arial',
+            fill: '#888888'
+        }).setOrigin(1, 0);
+        closeHint.setDepth(101);
+
+        // 创建临时覆盖层阻止输入
+        const inputBlocker = this.add.rectangle(400, 300, 800, 600, 0x000000, 0);
+        inputBlocker.setDepth(99);
+        inputBlocker.setInteractive();
+
+        // 点击或按键关闭对话框
+        const closeDialog = () => {
+            dialogBg.destroy();
+            dialogText.destroy();
+            speakerText.destroy();
+            closeHint.destroy();
+            inputBlocker.destroy();
+            inputBlocker.off('pointerdown', closeDialog);
+            this.input.keyboard.off('keydown', closeDialog);
+        };
+
+        inputBlocker.on('pointerdown', closeDialog);
+        this.input.keyboard.once('keydown', closeDialog);
+
+        console.log(`💬 对话: ${speaker}`);
+    }
+
+    showQuestDialog(speaker, message, npcId) {
+        // 创建对话框背景（更大以容纳选项）
+        const dialogBg = this.add.rectangle(400, 500, 700, 200, 0x222222);
+        dialogBg.setStrokeStyle(3, 0x68d391);
+        dialogBg.setDepth(100);
+
+        // 创建对话框文字
+        const dialogText = this.add.text(100, 420, message, {
+            font: '15px Noto Sans SC',
+            fill: '#ffffff',
+            wordWrap: { width: 620 }
+        });
+        dialogText.setDepth(101);
+
+        // 创建说话者名称
+        const speakerText = this.add.text(100, 400, speaker, {
+            font: 'bold 18px Noto Sans SC',
+            fill: '#68d391'
+        });
+        speakerText.setDepth(101);
+
+        // 创建选项按钮
+        const quest1 = this.questManager.getQuest('quest_1_moles');
+        const quest2 = this.questManager.getQuest('quest_2_gems');
+        const quest4 = this.questManager.getQuest('quest_4_slime_hunter');
+        const quest5 = this.questManager.getQuest('quest_5_blade_guardian');
+
+        // 检查哪些任务可以接取
+        const canAccept1 = quest1.status === 'not_started';
+        const canAccept2 = quest2.status === 'not_started';
+        const canAccept4 = quest4 && quest4.status === 'not_started' && quest1.status === 'completed';
+        const canAccept5 = quest5 && quest5.status === 'not_started' && quest1.status === 'completed';
+
+        // 构建提示文本
+        let buttonText = '按 ';
+        let shortcutCount = 0;
+
+        if (canAccept1) {
+            buttonText += `1 接取鼹鼠任务`;
+            shortcutCount++;
+        }
+        if (canAccept2) {
+            if (shortcutCount > 0) buttonText += ' | ';
+            buttonText += `2 接取宝石任务`;
+            shortcutCount++;
+        }
+        if (canAccept4) {
+            if (shortcutCount > 0) buttonText += ' | ';
+            buttonText += `3 接取史莱姆任务`;
+            shortcutCount++;
+        }
+        if (canAccept5) {
+            if (shortcutCount > 0) buttonText += ' | ';
+            buttonText += `4 接取守护者之刃任务`;
+            shortcutCount++;
+        }
+
+        buttonText += shortcutCount > 0 ? ' | ' : '';
+        buttonText += 'ESC 关闭';
+
+        const hintText = this.add.text(400, 570, buttonText, {
+            font: '13px Arial',
+            fill: '#ffd700'
+        }).setOrigin(0.5);
+        hintText.setDepth(101);
+
+        // 创建临时覆盖层阻止输入
+        const inputBlocker = this.add.rectangle(400, 300, 800, 600, 0x000000, 0);
+        inputBlocker.setDepth(99);
+        inputBlocker.setInteractive();
+
+        // 关闭对话框函数
+        const closeDialog = () => {
+            dialogBg.destroy();
+            dialogText.destroy();
+            speakerText.destroy();
+            hintText.destroy();
+            inputBlocker.destroy();
+            inputBlocker.off('pointerdown', closeDialog);
+            this.input.keyboard.off('keydown-ESC', closeDialog);
+            this.input.keyboard.off('keydown-ONE', acceptQuest1);
+            this.input.keyboard.off('keydown-TWO', acceptQuest2);
+            this.input.keyboard.off('keydown-THREE', acceptQuest4);
+            this.input.keyboard.off('keydown-FOUR', acceptQuest5);
+        };
+
+        // 接取任务1
+        const acceptQuest1 = () => {
+            if (quest1.status === 'not_started') {
+                const success = this.questManager.startQuest('quest_1_moles');
+                if (success) {
+                    this.showFloatingText(400, 300, '任务已接受: 鼹鼠威胁!', '#68d391', 2000);
+                }
+            }
+            closeDialog();
+        };
+
+        // 接取任务2
+        const acceptQuest2 = () => {
+            if (quest2.status === 'not_started') {
+                const success = this.questManager.startQuest('quest_2_gems');
+                if (success) {
+                    this.showFloatingText(400, 300, '任务已接受: 宝石收集!', '#68d391', 2000);
+                }
+            }
+            closeDialog();
+        };
+
+        // Milestone 6: 接取任务4 - 史莱姆狩猎
+        const acceptQuest4 = () => {
+            if (quest4 && quest4.status === 'not_started') {
+                const success = this.questManager.startQuest('quest_4_slime_hunter');
+                if (success) {
+                    this.showFloatingText(400, 300, '任务已接受: 史莱姆狩猎!', '#68d391', 2000);
+                }
+            } else if (quest4 && quest4.status !== 'not_started') {
+                // 任务已锁定或不满足条件
+                const prereqDesc = quest4.getPrerequisiteDescription();
+                this.showFloatingText(400, 300, `🔒 ${prereqDesc}`, '#ff6b6b', 2000);
+                closeDialog();
+            } else {
+                closeDialog();
+            }
+        };
+
+        // Milestone 6: 接取任务5 - 守护者之刃
+        const acceptQuest5 = () => {
+            if (quest5 && quest5.status === 'not_started') {
+                const success = this.questManager.startQuest('quest_5_blade_guardian');
+                if (success) {
+                    this.showFloatingText(400, 300, '任务已接受: 守护者之刃!', '#68d391', 2000);
+                }
+            } else if (quest5 && quest5.status !== 'not_started') {
+                // 任务已锁定或不满足条件
+                const prereqDesc = quest5.getPrerequisiteDescription();
+                this.showFloatingText(400, 300, `🔒 ${prereqDesc}`, '#ff6b6b', 2000);
+                closeDialog();
+            } else {
+                closeDialog();
+            }
+        };
+
+        inputBlocker.on('pointerdown', closeDialog);
+        this.input.keyboard.once('keydown-ESC', closeDialog);
+
+        // 只在任务可接取时添加按键监听
+        if (canAccept1) {
+            this.input.keyboard.once('keydown-ONE', acceptQuest1);
+        }
+        if (canAccept2) {
+            this.input.keyboard.once('keydown-TWO', acceptQuest2);
+        }
+        if (canAccept4) {
+            this.input.keyboard.once('keydown-THREE', acceptQuest4);
+        }
+        if (canAccept5) {
+            this.input.keyboard.once('keydown-FOUR', acceptQuest5);
+        }
+
+        console.log(`💬 任务对话: ${speaker}`);
+    }
+
+    openChest(chest) {
+        chest.setData('opened', true);
+
+        // 随机掉落物品
+        const random = Math.random();
+        let item;
+        let itemName;
+
+        if (random < 0.5) {
+            item = 'coin';
+            itemName = '金币';
+        } else if (random < 0.8) {
+            item = 'gem';
+            itemName = '宝石';
+        } else {
+            // 恢复生命值
+            this.player.hp = Math.min(this.player.maxHp, this.player.hp + 20);
+            itemName = '生命药水';
+            this.showFloatingText(chest.x, chest.y, '+20 HP', '#ff6b6b');
+            this.updateUI();
+        }
+
+        if (item) {
+            this.dropItem(chest.x, chest.y, item);
+            this.showFloatingText(chest.x, chest.y, `获得 ${itemName}!`, '#ffd700');
+        }
+
+        // 改变宝箱外观（简单变暗）
+        chest.setAlpha(0.5);
+
+        console.log(`🎁 打开宝箱: ${itemName}`);
+    }
+
+    playerAttack() {
+        if (this.player.isAttacking) return;
+
+        this.player.isAttacking = true;
+
+        // 播放攻击动画（使用动画系统）
+        const attackAnimKey = `attack-${this.player.facing}`;
+        this.player.anims.play(attackAnimKey, true);
+
+        // 获取敌人组（使用安全方法）
+        const enemies = this.getEnemiesGroup();
+        if (!enemies || enemies.getChildren().length === 0) {
+            console.log('⚠️ No enemies to attack');
+            this.player.isAttacking = false;
+            return;
+        }
+
+        // 创建攻击判定区域
+        const hitbox = this.add.rectangle(
+            this.player.x + (this.player.facing === 'side' && this.player.flipX ? -30 : 30),
+            this.player.y,
+            60,
+            60,
+            0xff0000,
+            0.3
+        );
+
+        // 标记是否已击中敌人（防止多重命中）
+        let hasHit = false;
+
+        this.physics.add.overlap(hitbox, enemies, (hitboxRect, enemy) => {
+            if (!hasHit) {
+                this.hitEnemy(enemy);
+                hasHit = true;
+                hitboxRect.destroy();
+            }
+        });
+
+        // 攻击冷却（300ms后恢复）
+        this.time.delayedCall(300, () => {
+            this.player.isAttacking = false;
+            this.resetPlayerAnimation();
+        });
+
+        // 清除判定区域（增加时间到200ms以确保overlap检测完成）
+        this.time.delayedCall(200, () => {
+            if (hitbox && hitbox.active) {
+                hitbox.destroy();
+            }
+        });
+    }
+
+    /**
+     * 安全获取敌人组
+     * @returns {Phaser.Physics.Arcade.Group|null} 敌人组，如果不存在则返回null
+     */
+    getEnemiesGroup() {
+        if (this.sceneManager && this.sceneManager.enemies) {
+            return this.sceneManager.enemies;
+        }
+        if (this.enemies) {
+            return this.enemies;
+        }
+        console.warn('⚠️ No enemies group found in scene');
+        return null;
+    }
+
+    hitEnemy(enemy) {
+        // 验证敌人对象有效
+        if (!enemy || !enemy.active) {
+            console.warn('⚠️ Attempted to hit invalid enemy');
+            return;
+        }
+
+        const damage = this.player.attack;
+        const currentHp = enemy.getData('hp') - damage;
+        const maxHp = enemy.getData('maxHp');
+        enemy.setData('hp', currentHp);
+
+        console.log(`⚔️ Hit enemy! Damage: ${damage}, Enemy HP: ${Math.max(0, currentHp)}/${maxHp}`);
+
+        // 更新血条宽度
+        if (enemy.hpBar) {
+            const hpPercent = Math.max(0, currentHp / maxHp);
+            enemy.hpBar.width = 40 * hpPercent;
+        }
+
+        // 显示伤害数字
+        this.showDamageNumber(enemy.x, enemy.y, damage);
+
+        // 检查敌人是否死亡
+        if (currentHp <= 0) {
+            this.enemyDeath(enemy);
+        }
+    }
+
+    enemyDeath(enemy) {
+        const xp = enemy.getData('xp');
+        const gold = enemy.getData('gold');
+        const enemyType = enemy.getData('type');
+        const specialAbility = enemy.getData('specialAbility');
+
+        // Milestone 6: 精英变异史莱姆分裂能力
+        if (specialAbility === 'split_on_death' && enemyType === 'elite_mutated_slime') {
+            console.log('✨ 变异史莱姆死亡，分裂成小史莱姆！');
+
+            // 分裂成2-3个小史莱姆
+            const numSmallSlimes = Phaser.Math.Between(2, 3);
+            for (let i = 0; i < numSmallSlimes; i++) {
+                const offsetX = Phaser.Math.Between(-50, 50);
+                const offsetY = Phaser.Math.Between(-50, 50);
+                const spawnX = Phaser.Math.Clamp(enemy.x + offsetX, 100, 700);
+                const spawnY = Phaser.Math.Clamp(enemy.y + offsetY, 100, 500);
+
+                // 生成小史莱姆（普通史莱姆数据）
+                const smallSlime = this.sceneManager.enemies.create(spawnX, spawnY, 'mole-idle-front');
+                smallSlime.setScale(2); // 比精英小，比普通稍大
+                smallSlime.setTint(0x00ff00); // 绿色调
+                smallSlime.setData('type', 'slime');
+                smallSlime.setData('hp', 15); // 低HP
+                smallSlime.setData('maxHp', 15);
+                smallSlime.setData('attack', 5); // 低攻击
+                smallSlime.setData('speed', 70); // 快速移动
+                smallSlime.setData('xp', 10); // 低经验
+                smallSlime.setData('gold', 5);
+                smallSlime.setData('lastHitTime', 0);
+
+                // 创建血条
+                const hpBarBg = this.add.rectangle(spawnX, spawnY - 20, 30, 3, 0x000000);
+                hpBarBg.setOrigin(0.5);
+                hpBarBg.setDepth(100);
+                const hpBar = this.add.rectangle(spawnX, spawnY - 20, 30, 3, 0xff0000);
+                hpBar.setOrigin(0.5);
+                hpBar.setDepth(101);
+                smallSlime.hpBar = hpBar;
+                smallSlime.hpBarBg = hpBarBg;
+
+                console.log(`  → 小史莱姆生成 at (${spawnX}, ${spawnY})`);
+            }
+
+            // 显示分裂提示
+            this.showFloatingText(enemy.x, enemy.y - 40, `✨ 分裂成 ${numSmallSlimes} 个小史莱姆!`, '#00ff00', 2000);
+        }
+
+        // 移除血条
+        if (enemy.hpBar) {
+            enemy.hpBar.destroy();
+        }
+        if (enemy.hpBarBg) {
+            enemy.hpBarBg.destroy();
+        }
+
+        // 获得经验和金币
+        this.gainXP(xp);
+        this.player.gold += gold;
+
+        // 移除敌人
+        enemy.destroy();
+
+        // 显示获得奖励提示
+        this.showFloatingText(enemy.x, enemy.y, `+${xp} XP`, '#4facfe');
+        this.showFloatingText(enemy.x, enemy.y - 20, `+${gold} G`, '#ffd700');
+
+        // 更新UI
+        this.updateUI();
+
+        // 更新游戏进度
+        if (window.gameData && window.gameData.progress) {
+            window.gameData.progress.enemiesDefeated++;
+
+            // 检查成就：第一次击杀
+            if (window.gameData.progress.enemiesDefeated === 1) {
+                this.achievementManager.unlock('first_blood');
+            }
+
+            // 检查成就：鼹鼠猎人
+            if (window.gameData.progress.enemiesDefeated >= 10) {
+                this.achievementManager.unlock('mole_hunter');
+            }
+        }
+
+        // 更新敌人类型统计
+        if (window.gameData && window.gameData.enemiesDefeated && enemyType) {
+            if (!window.gameData.enemiesDefeated[enemyType]) {
+                window.gameData.enemiesDefeated[enemyType] = 0;
+            }
+            window.gameData.enemiesDefeated[enemyType]++;
+
+            // Boss特殊处理
+            if (enemy.getData('isBoss')) {
+                const bossKey = `boss_${enemyType}`;
+                if (!window.gameData.enemiesDefeated[bossKey]) {
+                    window.gameData.enemiesDefeated[bossKey] = 0;
+                }
+                window.gameData.enemiesDefeated[bossKey]++;
+            }
+        }
+
+        // 播放音效
+        this.audioManager.playEnemyDeath();
+
+        // 更新任务目标
+        if (this.questManager && enemyType) {
+            this.questManager.onEnemyKilled(enemyType);
+        }
+    }
+
+    gainXP(amount) {
+        this.player.xp += amount;
+
+        if (this.player.xp >= this.player.xpToNextLevel) {
+            this.levelUp();
+        }
+
+        this.updateUI();
+    }
+
+    levelUp() {
+        this.player.level++;
+        this.player.xp -= this.player.xpToNextLevel;
+        this.player.xpToNextLevel = Math.floor(this.player.xpToNextLevel * 1.5);
+
+        // 增加属性
+        this.player.maxHp += 10;
+        this.player.hp = this.player.maxHp;
+        this.player.attack += 3;
+
+        // 显示升级提示
+        this.showFloatingText(this.player.x, this.player.y - 50, 'LEVEL UP!', '#ffd700');
+
+        // 播放升级音效
+        this.audioManager.playLevelUp();
+
+        // 检查成就：满级英雄
+        if (this.player.level >= 10) {
+            this.achievementManager.unlock('max_level');
+        }
+
+        // 检查成就：富有之人
+        if (this.player.gold >= 1000) {
+            this.achievementManager.unlock('wealthy');
+        }
+
+        // 自动保存游戏
+        if (this.saveManager) {
+            console.log('💾 [Level Up] Triggering auto-save...');
+            this.saveManager.autoSave();
+        }
+
+        console.log(`⬆️ 升级！当前等级：${this.player.level}`);
+    }
+
+    dropItem(x, y, type) {
+        let item;
+        if (type === 'coin') {
+            item = this.add.image(x, y, 'coin').setScale(2);
+
+            // 更新金币计数
+            if (window.gameData && window.gameData.progress) {
+                window.gameData.progress.totalCoins++;
+            }
+        } else if (type === 'gem') {
+            item = this.add.image(x, y, 'gem').setScale(2);
+
+            // 更新宝石计数
+            if (window.gameData && window.gameData.progress) {
+                window.gameData.progress.gemsCollected++;
+            }
+        }
+
+        if (item) {
+            // 简单的拾取动画
+            this.tweens.add({
+                targets: item,
+                y: y - 20,
+                alpha: 0,
+                duration: 500,
+                onComplete: () => item.destroy()
+            });
+        }
+    }
+
+    showDamageNumber(x, y, damage, color = '#ff0000') {
+        const text = this.add.text(x, y, damage.toString(), {
+            font: '20px Arial',
+            fill: color,
+            stroke: '#000000',
+            strokeThickness: 4
+        }).setOrigin(0.5);
+
+        this.tweens.add({
+            targets: text,
+            y: y - 50,
+            alpha: 0,
+            duration: 1000,
+            onComplete: () => text.destroy()
+        });
+    }
+
+    showFloatingText(x, y, message, color = '#ffffff') {
+        const text = this.add.text(x, y, message, {
+            font: '16px Arial',
+            fill: color,
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setOrigin(0.5);
+
+        this.tweens.add({
+            targets: text,
+            y: y - 40,
+            alpha: 0,
+            duration: 1500,
+            onComplete: () => text.destroy()
+        });
+    }
+
+    showWelcomeMessage() {
+        this.time.delayedCall(500, () => {
+            this.showFloatingText(400, 200, '欢迎来到森林探险！', '#68d391');
+            this.time.delayedCall(2000, () => {
+                this.showFloatingText(400, 240, '使用 WASD 移动，空格键攻击', '#4facfe');
+                this.time.delayedCall(2000, () => {
+                    this.showFloatingText(400, 280, '按 E 键与NPC对话', '#ffd700');
+                });
+            });
+        });
+    }
+
+    resetPlayerAnimation() {
+        // 停止当前动画
+        this.player.anims.stop();
+
+        // 切换回idle纹理（静态图片）
+        const idleTexture = `hero-idle-${this.player.facing}`;
+        this.player.setTexture(idleTexture);
+    }
+
+    initUI() {
+        // 显示UI
+        document.getElementById('hp-bar').style.display = 'block';
+        document.getElementById('xp-bar').style.display = 'block';
+        document.getElementById('level-display').style.display = 'block';
+        document.getElementById('gold-display').style.display = 'block';
+
+        // 添加场景名称显示
+        this.addSceneIndicator();
+
+        // 初始化任务UI
+        this.initQuestUI();
+
+        this.updateUI();
+    }
+
+    initQuestUI() {
+        // 创建任务追踪器（HUD）
+        this.questTracker = new QuestTracker(this);
+        this.questTracker.create();
+
+        // 创建任务日志面板
+        this.questLogPanel = new QuestLogPanel(this);
+        this.questLogPanel.create();
+
+        // 添加Q键监听器（切换任务日志）
+        this.input.keyboard.on('keydown-Q', () => {
+            this.questLogPanel.toggle();
+        });
+
+        console.log('✅ 任务UI初始化完成');
+    }
+
+    addSceneIndicator() {
+        // 创建场景名称显示
+        const indicator = this.add.text(400, 30, '小镇', {
+            font: '18px Press Start 2P',
+            fill: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 4
+        }).setOrigin(0.5).setDepth(90).setScrollFactor(0);
+
+        this.sceneNameText = indicator;
+    }
+
+    updateSceneIndicator(sceneName) {
+        const sceneNames = {
+            'town': '小镇',
+            'forest': '森林',
+            'cave': '洞穴'
+        };
+
+        if (this.sceneNameText) {
+            this.sceneNameText.setText(sceneNames[sceneName] || sceneName);
+        }
+    }
+
+    updateUI() {
+        // ============ 性能优化：只在值变化时更新DOM ============
+
+        // 缓存DOM元素（首次调用时）
+        if (!this.cachedDOMElements.levelText) {
+            this.cachedDOMElements.levelText = document.getElementById('level-text');
+            this.cachedDOMElements.goldText = document.getElementById('gold-text');
+            this.cachedDOMElements.hpText = document.getElementById('hp-text');
+            this.cachedDOMElements.hpBarFill = document.querySelector('#hp-bar .bar-fill');
+            this.cachedDOMElements.xpText = document.getElementById('xp-text');
+            this.cachedDOMElements.xpBarFill = document.querySelector('#xp-bar .bar-fill');
+        }
+
+        // 存储上次值以检测变化
+        if (!this.lastUIValues) {
+            this.lastUIValues = {
+                hp: this.player.hp,
+                maxHp: this.player.maxHp,
+                xp: this.player.xp,
+                xpToNextLevel: this.player.xpToNextLevel,
+                level: this.player.level,
+                gold: this.player.gold
+            };
+        }
+
+        // 只在值变化时更新DOM
+        if (this.player.hp !== this.lastUIValues.hp || this.player.maxHp !== this.lastUIValues.maxHp) {
+            const hpPercent = (this.player.hp / this.player.maxHp) * 100;
+            this.cachedDOMElements.hpText.textContent = `${this.player.hp}/${this.player.maxHp}`;
+            this.cachedDOMElements.hpBarFill.style.width = `${hpPercent}%`;
+            this.lastUIValues.hp = this.player.hp;
+            this.lastUIValues.maxHp = this.player.maxHp;
+        }
+
+        if (this.player.xp !== this.lastUIValues.xp || this.player.xpToNextLevel !== this.lastUIValues.xpToNextLevel) {
+            const xpPercent = (this.player.xp / this.player.xpToNextLevel) * 100;
+            this.cachedDOMElements.xpText.textContent = `${this.player.xp}/${this.player.xpToNextLevel}`;
+            this.cachedDOMElements.xpBarFill.style.width = `${xpPercent}%`;
+            this.lastUIValues.xp = this.player.xp;
+            this.lastUIValues.xpToNextLevel = this.player.xpToNextLevel;
+        }
+
+        if (this.player.level !== this.lastUIValues.level) {
+            this.cachedDOMElements.levelText.textContent = this.player.level;
+            this.lastUIValues.level = this.player.level;
+        }
+
+        if (this.player.gold !== this.lastUIValues.gold) {
+            this.cachedDOMElements.goldText.textContent = this.player.gold;
+            this.lastUIValues.gold = this.player.gold;
+        }
+    }
+
+    update() {
+        // 检查玩家是否离开传送区域（防止刚传送就触发返回）
+        if (this.sceneManager) {
+            this.sceneManager.checkTeleportExit();
+        }
+
+        // ============ 玩家移动 ============
+        if (!this.player.isAttacking) {
+            let velocityX = 0;
+            let velocityY = 0;
+            let newAnimation = null;
+
+            if (this.cursors.left.isDown || this.wasd.left.isDown) {
+                velocityX = -this.player.speed;
+                this.player.facing = 'side';
+                this.player.lastDirection = 'left';
+                newAnimation = 'walk-side';
+                // 向左移动时flipX
+                if (!this.player.flipX) {
+                    this.player.flipX = true;
+                }
+            } else if (this.cursors.right.isDown || this.wasd.right.isDown) {
+                velocityX = this.player.speed;
+                this.player.facing = 'side';
+                this.player.lastDirection = 'right';
+                newAnimation = 'walk-side';
+                // 向右移动时不flipX
+                if (this.player.flipX) {
+                    this.player.flipX = false;
+                }
+            } else if (this.cursors.up.isDown || this.wasd.up.isDown) {
+                velocityY = -this.player.speed;
+                this.player.facing = 'back';
+                this.player.lastDirection = 'up';
+                newAnimation = 'walk-back';
+                // 上下移动保持之前的左右朝向
+            } else if (this.cursors.down.isDown || this.wasd.down.isDown) {
+                velocityY = this.player.speed;
+                this.player.facing = 'front';
+                this.player.lastDirection = 'down';
+                newAnimation = 'walk-front';
+            }
+
+            // 播放或停止动画
+            if (newAnimation && newAnimation !== this.player.currentAnimation) {
+                this.player.anims.play(newAnimation, true);
+                this.player.currentAnimation = newAnimation;
+            } else if (!newAnimation && this.player.currentAnimation) {
+                // 停止移动时停止动画，显示idle帧
+                this.player.anims.stop();
+                this.player.currentAnimation = null;
+
+                // 设置为对应的idle纹理
+                const idleTexture = `hero-idle-${this.player.facing}`;
+                this.player.setTexture(idleTexture);
+            }
+
+            this.player.setVelocity(velocityX, velocityY);
+        }
+
+        // ============ 敌人AI ============
+        const enemies = this.getEnemiesGroup();
+        if (enemies && enemies.getChildren().length > 0) {
+            enemies.getChildren().forEach(enemy => {
+                // 验证敌人是活跃的
+                if (!enemy.active) return;
+
+                const behavior = enemy.getData('behavior');
+                const type = enemy.getData('type');
+                let speed = enemy.getData('speed');
+                let velocityX = 0;
+                let velocityY = 0;
+
+                // 根据敌人类型应用不同AI行为
+                if (behavior === 'flying' && type === 'bat') {
+                    // 蝙蝠：飞行敌人，移动速度更快且难以预测
+                    const angle = Phaser.Math.Angle.Between(
+                        enemy.x,
+                        enemy.y,
+                        this.player.x,
+                        this.player.y
+                    );
+
+                    // 蝙蝠会间歇性地改变方向（难以命中）
+                    if (!enemy.getData('lastDirectionChange') ||
+                        this.time.now - enemy.getData('lastDirectionChange') > 1500) {
+                        const randomOffset = (Math.random() - 0.5) * 1.5; // ±75度随机偏移
+                        enemy.setData('directionOffset', randomOffset);
+                        enemy.setData('lastDirectionChange', this.time.now);
+                    }
+
+                    const directionOffset = enemy.getData('directionOffset') || 0;
+                    velocityX = Math.cos(angle + directionOffset) * speed;
+                    velocityY = Math.sin(angle + directionOffset) * speed;
+
+                    // 蝙蝠有时会向上飞行（利用垂直空间）
+                    if (enemy.getData('verticalMovement') && Math.random() < 0.02) {
+                        velocityY -= speed * 0.5; // 向上冲刺
+                    }
+
+                } else if (behavior === 'undead' && type === 'skeleton') {
+                    // 骷髅：缓慢但稳定，会直冲向玩家
+                    const angle = Phaser.Math.Angle.Between(
+                        enemy.x,
+                        enemy.y,
+                        this.player.x,
+                        this.player.y
+                    );
+
+                    // 骷髅移动较慢但不会改变方向
+                    velocityX = Math.cos(angle) * speed;
+                    velocityY = Math.sin(angle) * speed;
+
+                } else if (behavior === 'elite' && enemy.getData('isElite')) {
+                    // 精英敌人：根据特殊能力有不同的行为
+                    const specialAbility = enemy.getData('specialAbility');
+                    const angle = Phaser.Math.Angle.Between(
+                        enemy.x,
+                        enemy.y,
+                        this.player.x,
+                        this.player.y
+                    );
+
+                    if (specialAbility === 'burrow_ambush' && type === 'elite_mole_king') {
+                        // 巨型鼹鼠王：间歇性加速冲锋
+                        if (!enemy.getData('burrowState')) {
+                            enemy.setData('burrowState', 'normal');
+                            enemy.setData('lastBurrowTime', 0);
+                        }
+
+                        const timeSinceLastBurrow = this.time.now - enemy.getData('lastBurrowTime');
+                        if (timeSinceLastBurrow > 8000 && enemy.getData('burrowState') === 'normal') {
+                            // 每8秒尝试钻地冲锋
+                            if (Math.random() < 0.3) {
+                                enemy.setData('burrowState', 'burrowing');
+                                enemy.setData('burrowStartTime', this.time.now);
+                                enemy.setData('lastBurrowTime', this.time.now);
+                            }
+                        }
+
+                        if (enemy.getData('burrowState') === 'burrowing') {
+                            // 钻地状态：速度提升50%，持续2秒
+                            const burrowDuration = this.time.now - enemy.getData('burrowStartTime');
+                            if (burrowDuration < 2000) {
+                                const boostSpeed = speed * 1.5;
+                                velocityX = Math.cos(angle) * boostSpeed;
+                                velocityY = Math.sin(angle) * boostSpeed;
+                            } else {
+                                enemy.setData('burrowState', 'normal');
+                            }
+                        } else {
+                            // 正常追踪
+                            velocityX = Math.cos(angle) * speed;
+                            velocityY = Math.sin(angle) * speed;
+                        }
+
+                    } else if (specialAbility === 'root_bind_heal' && type === 'elite_ancient_treant') {
+                        // 远古树妖：缓慢移动，周期性治疗周围盟友
+                        if (!enemy.getData('healCooldown')) {
+                            enemy.setData('healCooldown', 0);
+                        }
+
+                        // 每10秒尝试治疗附近盟友
+                        if (this.time.now - enemy.getData('healCooldown') > 10000) {
+                            const nearbyAllies = this.getEnemiesGroup().getChildren().filter(e => {
+                                return e.active && e !== enemy &&
+                                    Phaser.Math.Distance.Between(e.x, e.y, enemy.x, enemy.y) < 150;
+                            });
+
+                            if (nearbyAllies.length > 0) {
+                                // 治疗附近盟友（恢复20% HP）
+                                nearbyAllies.forEach(ally => {
+                                    const currentHp = ally.getData('hp');
+                                    const maxHp = ally.getData('maxHp');
+                                    const healAmount = Math.floor(maxHp * 0.2);
+                                    ally.setData('hp', Math.min(maxHp, currentHp + healAmount));
+                                });
+                                enemy.setData('healCooldown', this.time.now);
+                                console.log(`🌿 远古树妖治疗了 ${nearbyAllies.length} 个盟友`);
+                            }
+                        }
+
+                        // 移动缓慢
+                        velocityX = Math.cos(angle) * speed;
+                        velocityY = Math.sin(angle) * speed;
+
+                    } else if (specialAbility === 'split_on_death' && type === 'elite_mutated_slime') {
+                        // 变异史莱姆：移动速度适中，在死亡时分裂（在击杀逻辑中处理）
+                        velocityX = Math.cos(angle) * speed;
+                        velocityY = Math.sin(angle) * speed;
+                    } else {
+                        // 默认精英行为
+                        velocityX = Math.cos(angle) * speed;
+                        velocityY = Math.sin(angle) * speed;
+                    }
+
+                } else {
+                    // 默认AI：简单追踪
+                    const angle = Phaser.Math.Angle.Between(
+                        enemy.x,
+                        enemy.y,
+                        this.player.x,
+                        this.player.y
+                    );
+
+                    velocityX = Math.cos(angle) * speed;
+                    velocityY = Math.sin(angle) * speed;
+                }
+
+                enemy.setVelocity(velocityX, velocityY);
+
+                // 更新血条位置跟随敌人
+                if (enemy.hpBar && enemy.hpBarBg) {
+                    enemy.hpBarBg.setPosition(enemy.x, enemy.y - 25);
+                    enemy.hpBar.setPosition(enemy.x, enemy.y - 25);
+                }
+
+                // 碰撞检测：敌人碰到玩家
+                // 玩家和敌人都是32x32基础尺寸，scale为3，实际尺寸为96x96
+                // 碰撞距离设置为60，确保精灵实际接触时才触发伤害
+                const collisionDistance = 60;
+                const distance = Phaser.Math.Distance.Between(enemy.x, enemy.y, this.player.x, this.player.y);
+
+                if (distance < collisionDistance) {
+                    this.playerHitByEnemy(enemy);
+                }
+            });
+        }
+
+        // ============ Boss更新 ============
+        if (this.sceneManager && this.sceneManager.boss) {
+            this.sceneManager.boss.update(this.time.now, this.game.loop.delta, this.player);
+        }
+    }
+
+    playerHitByEnemy(enemy) {
+        // 场景切换时不受到伤害
+        if (this.sceneManager?.isTransitioning) return;
+
+        // 验证敌人对象有效
+        if (!enemy || !enemy.active) {
+            return;
+        }
+
+        // 检查敌人是否在冷却中（防止同一敌人连续伤害）
+        const now = this.time.now;
+        const lastHitTime = enemy.getData('lastHitTime') || 0;
+        const enemyCooldown = 1000; // 敌人攻击冷却时间（毫秒）
+
+        if (now - lastHitTime < enemyCooldown) {
+            return; // 该敌人还在冷却中
+        }
+
+        // 检查玩家是否处于无敌状态
+        if (this.player.getData('invincible')) {
+            return;
+        }
+
+        // 计算伤害
+        const damage = enemy.getData('attack') || 5;
+        const oldHp = this.player.hp;
+        this.player.hp = Math.max(0, this.player.hp - damage);
+
+        console.log(`💔 Player hit by ${enemy.getData('type')}! Damage: ${damage}, HP: ${oldHp} → ${this.player.hp}`);
+
+        // 更新该敌人的最后攻击时间
+        enemy.setData('lastHitTime', now);
+
+        // 显示伤害数字
+        this.showDamageNumber(this.player.x, this.player.y, damage, '#ff4444');
+
+        // 设置玩家无敌时间（视觉反馈 + 防止连续受伤）
+        this.player.setData('invincible', true);
+        this.player.setAlpha(0.5);
+
+        // 屏幕震动效果
+        this.cameras.main.shake(100, 0.01);
+
+        this.time.delayedCall(1000, () => {
+            this.player.setData('invincible', false);
+            this.player.setAlpha(1);
+        });
+
+        // 检查玩家是否死亡
+        if (this.player.hp <= 0) {
+            this.gameOver();
+        }
+
+        this.updateUI();
+    }
+
+    /**
+     * 检查是否存在存档数据
+     */
+    checkSaveData() {
+        if (this.saveManager.hasSaveData()) {
+            const saveInfo = this.saveManager.getSaveInfo();
+            console.log('📦 发现存档:', saveInfo);
+
+            // 显示加载提示
+            this.time.delayedCall(1000, () => {
+                this.showLoadPrompt(saveInfo);
+            });
+        }
+    }
+
+    /**
+     * 显示加载提示对话框
+     */
+    showLoadPrompt(saveInfo) {
+        const message = `发现存档！\n等级: ${saveInfo.level}\n场景: ${saveInfo.scene}\n时间: ${saveInfo.timestamp}\n\n按 Y 加载存档\n按 N 开始新游戏`;
+
+        // 创建对话框背景
+        const dialogBg = this.add.rectangle(400, 300, 600, 400, 0x222222);
+        dialogBg.setStrokeStyle(3, 0x68d391);
+        dialogBg.setDepth(100);
+
+        // 创建对话框文字
+        const dialogText = this.add.text(400, 300, message, {
+            font: '16px Noto Sans SC',
+            fill: '#ffffff',
+            align: 'center',
+            lineSpacing: 10
+        }).setOrigin(0.5);
+        dialogText.setDepth(101);
+
+        // 创建临时覆盖层阻止输入
+        const inputBlocker = this.add.rectangle(400, 300, 800, 600, 0x000000, 0);
+        inputBlocker.setDepth(99);
+        inputBlocker.setInteractive();
+
+        // 监听Y和N键
+        const handleChoice = (event) => {
+            if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.Y) {
+                // 加载存档
+                dialogBg.destroy();
+                dialogText.destroy();
+                inputBlocker.destroy();
+                this.input.keyboard.off('keydown', handleChoice);
+                this.loadGameWithDelay();
+            } else if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.N) {
+                // 开始新游戏
+                dialogBg.destroy();
+                dialogText.destroy();
+                inputBlocker.destroy();
+                this.input.keyboard.off('keydown', handleChoice);
+                this.showFloatingText(400, 300, '开始新游戏!', '#68d391');
+            }
+        };
+
+        this.input.keyboard.on('keydown', handleChoice);
+
+        // 点击也可关闭（选择不加载）
+        inputBlocker.on('pointerdown', () => {
+            dialogBg.destroy();
+            dialogText.destroy();
+            inputBlocker.destroy();
+            this.input.keyboard.off('keydown', handleChoice);
+        });
+    }
+
+    /**
+     * 延迟加载游戏（等待场景初始化完成）
+     */
+    loadGameWithDelay() {
+        this.time.delayedCall(500, () => {
+            this.saveManager.loadGame();
+        });
+    }
+
+    /**
+     * 快速保存游戏
+     */
+    quickSave() {
+        const success = this.saveManager.saveGame();
+        if (success) {
+            this.showFloatingText(400, 300, '游戏已保存!', '#68d391');
+        }
+    }
+
+    /**
+     * 快速加载游戏
+     */
+    quickLoad() {
+        if (!this.saveManager.hasSaveData()) {
+            this.showFloatingText(400, 300, '未找到存档!', '#ff6b6b');
+            return;
+        }
+
+        this.saveManager.loadGame();
+    }
+
+    gameOver() {
+        this.physics.pause();
+
+        const gameOverText = this.add.text(400, 300, '游戏结束\nGAME OVER\n\n按R键重新开始', {
+            fontFamily: 'Press Start 2P',
+            fontSize: '28px',
+            color: '#ff0000',
+            stroke: '#000000',
+            strokeThickness: 6,
+            align: 'center'
+        }).setOrigin(0.5);
+
+        // 闪烁重启提示
+        this.tweens.add({
+            targets: gameOverText,
+            alpha: 0.5,
+            duration: 500,
+            yoyo: true,
+            repeat: -1
+        });
+
+        // 监听R键重启
+        this.restartKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+        this.restartKey.on('down', () => {
+            this.scene.restart();
+        });
+
+        console.log('💀 游戏结束');
+
+        // 记录游戏结束时的统计
+        const finalStats = this.getGameStats();
+        console.log('📊 最终统计:', finalStats);
+    }
+
+    /**
+     * 获取游戏统计信息（用于调试和显示）
+     */
+    getGameStats() {
+        const enemies = this.getEnemiesGroup();
+        return {
+            player: {
+                level: this.player.level,
+                hp: this.player.hp,
+                maxHp: this.player.maxHp,
+                xp: this.player.xp,
+                gold: this.player.gold,
+                attack: this.player.attack,
+                position: { x: Math.round(this.player.x), y: Math.round(this.player.y) }
+            },
+            scene: {
+                current: this.sceneManager.getCurrentScene(),
+                enemies: enemies ? enemies.getChildren().length : 0
+            },
+            quests: this.questManager ? {
+                stats: this.questManager.getStats(),
+                active: this.questManager.getActiveQuests().map(q => ({
+                    id: q.id,
+                    name: q.name,
+                    progress: q.getProgress()
+                }))
+            } : null,
+            saveData: this.saveManager.hasSaveData() ? 'exists' : 'none',
+            timestamp: new Date().toISOString()
+        };
+    }
+
+    /**
+     * 调试方法：开始任务
+     * @param {string} questId - 任务ID
+     */
+    debugStartQuest(questId) {
+        if (!this.questManager) {
+            console.error('❌ QuestManager未初始化');
+            return false;
+        }
+
+        const success = this.questManager.startQuest(questId);
+        if (success) {
+            console.log(`✅ 任务已开始: ${questId}`);
+        } else {
+            console.log(`❌ 任务开始失败: ${questId}`);
+        }
+        return success;
+    }
+
+    /**
+     * 调试方法：显示所有任务状态
+     */
+    debugShowQuests() {
+        if (!this.questManager) {
+            console.error('❌ QuestManager未初始化');
+            return;
+        }
+
+        console.log('📋 任务状态:');
+        console.log('================');
+
+        const stats = this.questManager.getStats();
+        console.log(`总计: ${stats.total} | 进行中: ${stats.active} | 已完成: ${stats.completed} | 可接受: ${stats.available}`);
+        console.log('');
+
+        const activeQuests = this.questManager.getActiveQuests();
+        if (activeQuests.length > 0) {
+            console.log('🔵 激活的任务:');
+            activeQuests.forEach(quest => {
+                const objective = quest.getCurrentObjective();
+                console.log(`  - ${quest.name}`);
+                if (objective) {
+                    console.log(`    ${objective.description}: ${objective.current}/${objective.required}`);
+                }
+            });
+        }
+
+        const completedQuests = this.questManager.getCompletedQuests();
+        if (completedQuests.length > 0) {
+            console.log('✅ 已完成的任务:');
+            completedQuests.forEach(quest => {
+                console.log(`  - ${quest.name}`);
+            });
+        }
+    }
+
+    /**
+     * 显示游戏统计信息
+     * 可以在浏览器控制台调用: window.game.scene.scenes.find(s => s.scene.key === 'GameScene').showStatistics()
+     */
+    showStatistics() {
+        if (!window.gameData) {
+            console.error('❌ gameData未初始化');
+            return;
+        }
+
+        console.log('\n📊 ===== 游戏统计 =====');
+        console.log('====================\n');
+
+        // 玩家信息
+        console.log('👤 玩家信息:');
+        console.log(`  等级: ${this.player.level}`);
+        console.log(`  金币: ${this.player.gold}`);
+        console.log(`  经验: ${this.player.xp}/${this.player.xpToNextLevel}`);
+        console.log('');
+
+        // 游戏时间
+        if (window.gameData.progress) {
+            const playtimeSeconds = window.gameData.progress.playtimeSeconds || 0;
+            const hours = Math.floor(playtimeSeconds / 3600);
+            const minutes = Math.floor((playtimeSeconds % 3600) / 60);
+            const seconds = playtimeSeconds % 60;
+
+            console.log('⏱️ 游戏时间:');
+            if (hours > 0) {
+                console.log(`  ${hours}小时 ${minutes}分钟 ${seconds}秒`);
+            } else if (minutes > 0) {
+                console.log(`  ${minutes}分钟 ${seconds}秒`);
+            } else {
+                console.log(`  ${seconds}秒`);
+            }
+            console.log('');
+        }
+
+        // 击败统计
+        if (window.gameData.progress) {
+            console.log('⚔️ 战斗统计:');
+            console.log(`  总击败数: ${window.gameData.progress.enemiesDefeated || 0}`);
+            console.log(`  收集金币: ${window.gameData.progress.totalCoins || 0}`);
+            console.log(`  收集宝石: ${window.gameData.progress.gemsCollected || 0}`);
+            console.log('');
+        }
+
+        // 敌人类型统计
+        if (window.gameData.enemiesDefeated) {
+            console.log('💀 敌人击败详情:');
+            const enemies = window.gameData.enemiesDefeated;
+            let hasData = false;
+
+            for (const [type, count] of Object.entries(enemies)) {
+                if (count > 0) {
+                    hasData = true;
+                    const displayName = type.startsWith('boss_') ? `👑 Boss(${type.replace('boss_', '')})` : type;
+                    console.log(`  ${displayName}: ${count}`);
+                }
+            }
+
+            if (!hasData) {
+                console.log('  尚未击败任何敌人');
+            }
+            console.log('');
+        }
+
+        // 任务统计
+        if (this.questManager) {
+            const questStats = this.questManager.getStats();
+            console.log('📜 任务统计:');
+            console.log(`  总计: ${questStats.total}`);
+            console.log(`  进行中: ${questStats.active}`);
+            console.log(`  已完成: ${questStats.completed}`);
+            console.log(`  可接受: ${questStats.available}`);
+            console.log('');
+        }
+
+        // 成就统计
+        if (this.achievementManager) {
+            const achievements = this.achievementManager.getAchievements();
+            const unlockedCount = achievements.filter(a => a.unlocked).length;
+            console.log('🏆 成就统计:');
+            console.log(`  已解锁: ${unlockedCount}/${achievements.length}`);
+            console.log('');
+        }
+
+        console.log('====================');
+        console.log('📊 统计结束\n');
+
+        // 同时在游戏中显示简要统计
+        this.showFloatingText(400, 200, '📊 统计已显示在控制台', '#68d391', 3000);
+    }
+
+    /**
+     * 更新循环（每帧调用）
+     * @param {number} time - 当前时间
+     * @param {number} delta - 距离上一帧的时间（毫秒）
+     */
+    update(time, delta) {
+        // ============ 性能优化：每秒更新一次统计信息 ============
+        if (window.gameData && window.gameData.progress && window.gameData.progress.sessionStartTime) {
+            const now = Date.now();
+            // 只在距离上次更新超过1000ms时更新（节流）
+            if (now - window.gameData.progress.lastPlaytimeUpdate >= 1000) {
+                const elapsedSeconds = Math.floor((now - window.gameData.progress.sessionStartTime) / 1000);
+                window.gameData.progress.playtimeSeconds = elapsedSeconds;
+                window.gameData.progress.lastPlaytimeUpdate = now;
+            }
+        }
+    }
+
+    /**
+     * 场景销毁时清理资源
+     * 防止内存泄漏
+     */
+    destroy() {
+        console.log('🧹 清理 GameScene 资源');
+
+        // 清理缓存的DOM元素引用
+        this.cachedDOMElements = null;
+        this.lastUIValues = null;
+
+        // 清理UI引用
+        if (this.sceneNameText) {
+            this.sceneNameText.destroy();
+            this.sceneNameText = null;
+        }
+
+        // 清理事件监听
+        if (this.questManager) {
+            this.events.off('questStarted');
+            this.events.off('questCompleted');
+            this.events.off('questUpdated');
+            this.events.off('bossDefeated');
+        }
+
+        console.log('✅ GameScene 资源已清理');
+    }

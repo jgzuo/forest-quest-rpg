@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forest Quest RPG - 诊断模式</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #fff;
+            font-family: monospace;
+        }
+        #log {
+            background: #0f0f23;
+            padding: 20px;
+            border-radius: 8px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-left: 3px solid #68d391;
+        }
+        .error {
+            border-left-color: #ff0000;
+            color: #ff6b6b;
+        }
+        .success {
+            border-left-color: #68d391;
+            color: #68d391;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Forest Quest RPG - 诊断模式</h1>
+    <div id="log"></div>
+
+    <script>
+        function addLog(message, type = 'info') {
+            const log = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+            console.log(message);
+        }
+
+        addLog('开始诊断...', 'info');
+
+        // 检查Phaser是否加载
+        if (typeof Phaser === 'undefined') {
+            addLog('❌ Phaser未加载！', 'error');
+        } else {
+            addLog(`✅ Phaser已加载 (版本: ${Phaser.VERSION})`, 'success');
+        }
+
+        // 检查所有必需的类
+        const requiredClasses = [
+            'BootScene',
+            'GameScene',
+            'VictoryScene',
+            'SaveManager',
+            'SceneManager',
+            'ShopManager',
+            'Quest',
+            'QuestManager',
+            'AudioManager',
+            'AchievementManager',
+            'QuestTracker',
+            'QuestLogPanel',
+            'Boss'
+        ];
+
+        requiredClasses.forEach(className => {
+            if (typeof window[className] !== 'undefined') {
+                addLog(`✅ ${className} 已定义`, 'success');
+            } else {
+                addLog(`❌ ${className} 未定义！`, 'error');
+            }
+        });
+
+        // 检查localStorage
+        try {
+            localStorage.setItem('test', 'test');
+            localStorage.removeItem('test');
+            addLog('✅ localStorage 可用', 'success');
+        } catch (e) {
+            addLog(`❌ localStorage 不可用: ${e.message}`, 'error');
+        }
+
+        addLog('诊断完成！', 'info');
+        addLog('如果所有检查都通过，请按F12查看浏览器控制台获取更多信息', 'info');
+    </script>
+
+    <!-- Phaser.js -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+
+    <!-- Game Scripts -->
+    <script src="src/utils/SaveManager.js"></script>
+    <script src="src/utils/SceneManager.js"></script>
+    <script src="src/utils/ShopManager.js"></script>
+    <script src="src/utils/Quest.js"></script>
+    <script src="src/utils/QuestManager.js"></script>
+    <script src="src/utils/AudioManager.js"></script>
+    <script src="src/utils/AchievementManager.js"></script>
+    <script src="src/ui/QuestTracker.js"></script>
+    <script src="src/ui/QuestLogPanel.js"></script>
+    <script src="src/entities/Boss.js"></script>
+    <script src="src/scenes/BootScene.js"></script>
+    <script src="src/scenes/GameScene.js"></script>
+    <script src="src/scenes/VictoryScene.js"></script>
+</body>
+</html>
