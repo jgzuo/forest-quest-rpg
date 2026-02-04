@@ -1,10 +1,1 @@
-fix: remove graphGraphics from container to prevent strokePath error
-
-Problem:
-- Error: Cannot read properties of null (reading 'cut')
-- Graphics objects in Container have issues with strokePath() in Phaser 3
-
-Fix:
-- Don't add graphGraphics to container
-- Manage graphics position independently
-- This allows strokePath() to work correctly
+docs: add v1.9.8 bug fix changelog

@@ -1437,7 +1437,137 @@ class GameScene extends Phaser.Scene {
             }
         });
 
+        // ============ 调试快捷键（US-043） ============
+        console.log('🔧 调试快捷键初始化...');
+
+        // F4: 测试音效系统
+        this.input.keyboard.on('keydown-F4', () => {
+            this.debugTestAudio();
+        });
+
+        // Shift+F6: 切换战斗统计面板（避免与浏览器F6冲突）
+        this.input.keyboard.on('keydown-F6', () => {
+            const shiftKey = this.input.keyboard.checkShift();
+            if (shiftKey && this.combatStatsPanel) {
+                this.combatStatsPanel.toggle();
+            }
+        });
+
+        // Shift+F7: 生成测试精英敌人
+        this.input.keyboard.on('keydown-F7', () => {
+            const shiftKey = this.input.keyboard.checkShift();
+            if (shiftKey) {
+                this.debugSpawnEliteEnemy();
+            }
+        });
+
+        // Shift+F8: 生成测试Boss
+        this.input.keyboard.on('keydown-F8', () => {
+            const shiftKey = this.input.keyboard.checkShift();
+            if (shiftKey) {
+                this.debugSpawnBoss();
+            }
+        });
+
+        // Shift+F10: 重置战斗分析数据
+        this.input.keyboard.on('keydown-F10', () => {
+            const shiftKey = this.input.keyboard.checkShift();
+            if (shiftKey) {
+                this.debugResetCombatAnalytics();
+            }
+        });
+
+        console.log('✅ 调试快捷键已启用 (F4, Shift+F6~F10)');
         console.log('✅ 战斗统计面板初始化完成');
+    }
+
+    /**
+     * US-043: 调试功能 - 测试音效系统
+     */
+    debugTestAudio() {
+        console.log('🔊 [调试] 测试音效系统...');
+
+        if (!this.combatAudioManager) {
+            this.showFloatingText(400, 300, '❌ 音效系统未初始化', '#ff6b6b');
+            return;
+        }
+
+        // 测试元素音效
+        const elements = ['fire', 'ice', 'lightning', 'poison'];
+        const randomElement = elements[Math.floor(Math.random() * elements.length)];
+        this.combatAudioManager.playElementSound(randomElement, 50);
+
+        // 测试连击音效
+        this.combatAudioManager.playComboSound(10);
+
+        // 测试技能音效
+        this.combatAudioManager.playSkillSound('whirlwind_slash', 'cast');
+
+        // 测试完美格挡音效
+        this.combatAudioManager.playPerfectParry();
+
+        this.showFloatingText(400, 300, '🔊 音效测试完成', '#48bb78');
+        console.log('✅ 音效测试完成');
+    }
+
+    /**
+     * US-043: 调试功能 - 生成测试精英敌人
+     */
+    debugSpawnEliteEnemy() {
+        console.log('⭐ [调试] 生成精英敌人...');
+
+        const x = this.player.x + (Math.random() - 0.5) * 300;
+        const y = this.player.y + (Math.random() - 0.5) * 300;
+
+        // 限制在场景范围内
+        const clampedX = Phaser.Math.Clamp(x, 100, 700);
+        const clampedY = Phaser.Math.Clamp(y, 100, 500);
+
+        if (this.sceneManager && this.sceneManager.createEnemy) {
+            this.sceneManager.createEnemy('elite_mole_king', clampedX, clampedY);
+            this.showFloatingText(clampedX, clampedY - 50, '⭐ 精英敌人已生成', '#ffd700');
+            console.log(`✅ 精英敌人生成于 (${clampedX}, ${clampedY})`);
+        }
+    }
+
+    /**
+     * US-043: 调试功能 - 生成测试Boss
+     */
+    debugSpawnBoss() {
+        console.log('👑 [调试] 生成Boss...');
+
+        const x = this.player.x;
+        const y = this.player.y - 150;
+
+        if (this.sceneManager && this.sceneManager.spawnBoss) {
+            // 清除现有Boss
+            if (this.sceneManager.boss) {
+                this.sceneManager.boss.destroy();
+                this.sceneManager.boss = null;
+            }
+
+            this.sceneManager.spawnBoss('treant_boss', x, y);
+            this.showFloatingText(x, y - 100, '👑 Boss已生成', '#ff0000');
+            console.log(`✅ Boss生成于 (${x}, ${y})`);
+        }
+    }
+
+    /**
+     * US-043: 调试功能 - 重置战斗分析数据
+     */
+    debugResetCombatAnalytics() {
+        console.log('📊 [调试] 重置战斗数据...');
+
+        if (this.combatDataAnalyzer) {
+            this.combatDataAnalyzer.reset();
+            this.showFloatingText(400, 300, '📊 数据已重置', '#48bb78');
+            console.log('✅ 战斗数据已重置');
+        }
+
+        if (this.combatStatsPanel) {
+            // 重置统计面板数据
+            console.log('✅ 统计面板已重置');
+        }
     }
 
     addSceneIndicator() {

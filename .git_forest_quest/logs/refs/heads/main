@@ -11,3 +11,5 @@ e322ff072ec60600950aeeff890f9b465a136b25 e3a262142b47ef6b40e797940ad60569a96e53f
 e3a262142b47ef6b40e797940ad60569a96e53f5 18663fc79d329cf6d8b885637e5277464ba7c95c Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770191396 +0800	commit: fix: remove conflicting enemy movement logic from EnemyAI
 18663fc79d329cf6d8b885637e5277464ba7c95c 7ad9ba12799d6cd4f06beb0928a982fe610bb6d5 Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770191628 +0800	commit: fix: add enemy physics body configuration to prevent runaway speed
 7ad9ba12799d6cd4f06beb0928a982fe610bb6d5 6eb9ca66f1e0412ea3715e03616b6b9285c87605 Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770191915 +0800	commit: fix: remove graphGraphics from container to prevent strokePath error
+6eb9ca66f1e0412ea3715e03616b6b9285c87605 745d46c634b26e6ad96ae93c5f183ef05ae0eca4 Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770192070 +0800	commit: fix: add comprehensive error handling to PerformanceMonitor.drawFPSGraph
+745d46c634b26e6ad96ae93c5f183ef05ae0eca4 01c12a26b7b4656d9f6df1c7bb9f1e31da49ebbb Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770192129 +0800	commit: docs: add v1.9.8 bug fix changelog
