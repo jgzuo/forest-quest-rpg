@@ -280,6 +280,13 @@ class AudioManager {
                 duration: 0.1,
                 pitchEnvelope: { start: 1.2, end: 0.8 },
                 amplitudeEnvelope: { attack: 0.01, decay: 0.09 }
+            },
+            // 宠物音效
+            pet_attack: {
+                type: 'sine',
+                frequency: 800,
+                duration: 0.1,
+                amplitudeEnvelope: { attack: 0.01, decay: 0.09 }
             }
         };
 
@@ -581,14 +588,12 @@ class AudioManager {
         return this.sfxEnabled;
     }
 
+    // ============ 🐾 宠物系统音效 ============
+
     /**
-     * 清理音频资源
+     * 播放宠物攻击音效
      */
-    destroy() {
-        this.stopMusic();
-        if (this.audioContext && this.audioContext.state !== 'closed') {
-            this.audioContext.close();
-        }
-        console.log('🎵 音频管理器已清理');
+    playPetAttack() {
+        this.playSFX('pet_attack');
     }
 }

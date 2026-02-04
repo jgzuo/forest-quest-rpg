@@ -212,6 +212,11 @@ class Boss {
 
         this.isActive = true;
         console.log(`👑 Boss激活: ${this.bossName}, HP=${this.hp}/${this.maxHp}`);
+
+        // ============ Boss战史诗音乐 ============
+        if (this.scene.combatAudioManager) {
+            this.scene.combatAudioManager.playBossMusic(this.type, 1);
+        }
     }
 
     /**
@@ -335,6 +340,13 @@ class Boss {
         // 阶段变化时触发特效
         if (oldPhase !== this.phase) {
             this.onPhaseChange(oldPhase, this.phase);
+
+            // ============ 播放阶段转换音乐和音效 ============
+            if (this.scene.combatAudioManager) {
+                this.scene.combatAudioManager.playBossPhaseTransition();
+                // 切换音乐到对应阶段
+                this.scene.combatAudioManager.playBossMusic(this.type, this.phase);
+            }
         }
 
         // 更新阶段显示
@@ -1225,6 +1237,11 @@ class Boss {
         // 播放Boss死亡音效
         if (this.scene.audioManager) {
             this.scene.audioManager.playBossDeath();
+        }
+
+        // ============ 播放Boss战胜利音乐 ============
+        if (this.scene.combatAudioManager) {
+            this.scene.combatAudioManager.playBossVictory();
         }
 
         // 相机庆祝效果

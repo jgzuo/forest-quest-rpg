@@ -233,8 +233,19 @@ class SkillSystem {
         // 创建旋转动画
         this.createWhirlwindSpinEffect(def.aoeRadius);
 
+        // 新增：创建风痕粒子
+        if (this.scene.combatParticles) {
+            this.scene.combatParticles.createWindTrails(
+                this.player.x,
+                this.player.y,
+                def.aoeRadius * 0.7,
+                16
+            );
+        }
+
         // 延迟伤害（配合旋转动画）
         this.scene.time.delayedCall(200, () => {
+            let hitCount = 0;
             enemies.getChildren().forEach(enemy => {
                 if (!enemy.active) return;
 
@@ -248,6 +259,13 @@ class SkillSystem {
 
                     // 创建斩击特效
                     this.createSlashEffect(enemy.x, enemy.y);
+
+                    // 新增：命中时创建火花
+                    if (this.scene.combatParticles) {
+                        this.scene.combatParticles.createSparks(enemy.x, enemy.y, 10);
+                    }
+
+                    hitCount++;
 
                     // ============ Milestone 7: 使用新的伤害系统 ============
                     if (this.scene.applySkillDamage) {
@@ -285,6 +303,11 @@ class SkillSystem {
 
         // ============ 音效 ============
         this.scene.audioManager.playWhirlwindSlash();
+
+        // 战斗音效系统（新）
+        if (this.scene.combatAudioManager) {
+            this.scene.combatAudioManager.playSkillSound('whirlwind_slash', 'cast');
+        }
     }
 
     /**
@@ -314,6 +337,23 @@ class SkillSystem {
         // 创建冲锋拖尾特效
         this.createDashTrail(this.player.x, this.player.y, clampedX, clampedY);
 
+        // 新增：创建地面裂痕
+        if (this.scene.combatParticles) {
+            const angle = Math.atan2(clampedY - this.player.y, clampedX - this.player.x);
+            const distance = Phaser.Math.Distance.Between(this.player.x, this.player.y, clampedX, clampedY);
+            const crackCount = Math.floor(distance / 30);
+
+            for (let i = 0; i < crackCount; i++) {
+                const progress = i / crackCount;
+                const crackX = this.player.x + (clampedX - this.player.x) * progress;
+                const crackY = this.player.y + (clampedY - this.player.y) * progress;
+
+                this.scene.time.delayedCall(i * 30, () => {
+                    this.scene.combatParticles.createGroundCrack(crackX, crackY, angle, 30);
+                });
+            }
+        }
+
         // 玩家闪烁（无敌效果）
         const originalAlpha = this.player.alpha;
         this.player.setAlpha(0.5);
@@ -335,6 +375,11 @@ class SkillSystem {
                 // 冲锋终点特效
                 this.createDashImpactEffect(clampedX, clampedY);
 
+                // 新增：多层冲击波
+                if (this.scene.combatParticles) {
+                    this.scene.combatParticles.createMultiLayerShockwave(clampedX, clampedY, 0xed8936, 3, 100);
+                }
+
                 // 屏幕震动
                 this.scene.cameras.main.shake(100, 0.01);
             }
@@ -342,6 +387,11 @@ class SkillSystem {
 
         // ============ 音效 ============
         this.scene.audioManager.playCharge();
+
+        // 战斗音效系统（新）
+        if (this.scene.combatAudioManager) {
+            this.scene.combatAudioManager.playSkillSound('charge', 'cast');
+        }
     }
 
     /**
@@ -354,6 +404,9 @@ class SkillSystem {
 
         // 创建持续治疗光环
         this.createHealingAura(def.healDuration);
+
+        // 新增：创建十字架形状
+        this.createHealingCross();
 
         let ticks = 0;
         const healInterval = this.scene.time.addEvent({
@@ -383,6 +436,73 @@ class SkillSystem {
 
         // ============ 音效 ============
         this.scene.audioManager.playHealingLight();
+
+        // 战斗音效系统（新）
+        if (this.scene.combatAudioManager) {
+            this.scene.combatAudioManager.playSkillSound('healing_light', 'cast');
+        }
+    }
+
+    /**
+     * 新增：创建治疗十字架形状
+     */
+    createHealingCross() {
+        const graphics = this.scene.add.graphics();
+        graphics.setDepth(98);
+        graphics.lineStyle(4, 0xffffff, 0.6);
+
+        const centerX = this.player.x;
+        const centerY = this.player.y;
+        const size = 40;
+
+        // 绘制十字架
+        graphics.beginPath();
+        // 竖线
+        graphics.moveTo(centerX, centerY - size);
+        graphics.lineTo(centerX, centerY + size);
+        // 横线
+        graphics.moveTo(centerX - size * 0.6, centerY - size * 0.3);
+        graphics.lineTo(centerX + size * 0.6, centerY - size * 0.3);
+        graphics.strokePath();
+
+        // 旋转淡出动画
+        this.scene.tweens.add({
+            targets: graphics,
+            rotation: Math.PI / 4,
+            alpha: 0,
+            scale: 2,
+            duration: 1200,
+            ease: 'Power2',
+            onComplete: () => {
+                graphics.destroy();
+            }
+        });
+
+        // 创建光芒射线（8方向）
+        for (let i = 0; i < 8; i++) {
+            const angle = (Math.PI * 2 / 8) * i;
+            const rayGraphics = this.scene.add.graphics();
+            rayGraphics.setDepth(97);
+            rayGraphics.lineStyle(2, 0xffffff, 0.4);
+
+            rayGraphics.beginPath();
+            rayGraphics.moveTo(centerX, centerY);
+            rayGraphics.lineTo(
+                centerX + Math.cos(angle) * 80,
+                centerY + Math.sin(angle) * 80
+            );
+            rayGraphics.strokePath();
+
+            this.scene.tweens.add({
+                targets: rayGraphics,
+                alpha: 0,
+                duration: 800,
+                delay: i * 50,
+                onComplete: () => {
+                    rayGraphics.destroy();
+                }
+            });
+        }
     }
 
     /**
@@ -415,6 +535,11 @@ class SkillSystem {
             yoyo: true,
             ease: 'Power2'
         });
+
+        // ============ US-009: 大招慢动作效果 ============
+        if (this.scene.combatCameraSystem) {
+            this.scene.combatCameraSystem.onUltimateCast(this.player.x, this.player.y);
+        }
 
         // 2. 延迟执行伤害（蓄力时间）
         this.scene.time.delayedCall(300, () => {
@@ -464,6 +589,64 @@ class SkillSystem {
             // 终极技能视觉特效（更大、更华丽）
             this.createUltimateSuperEffect(def.aoeRadius, def.duration);
 
+            // 新增：大量粒子爆炸
+            if (this.scene.combatParticles) {
+                this.scene.combatParticles.createDeathExplosion(this.player.x, this.player.y, 0xffcc00, 50);
+            }
+
+            // 新增：时间慢动作效果（敌人都减速）
+            if (this.scene.enemies) {
+                this.scene.enemies.forEach(enemy => {
+                    if (enemy.setData) {
+                        const originalSpeed = enemy.getData('speed') || 50;
+                        enemy.setData('originalSpeed', originalSpeed);
+                        enemy.setData('speed', originalSpeed * 0.3);
+                    }
+                });
+
+                // 恢复敌人速度
+                this.scene.time.delayedCall(def.duration, () => {
+                    if (this.scene.enemies) {
+                        this.scene.enemies.forEach(enemy => {
+                            if (enemy.setData && enemy.getData) {
+                                const originalSpeed = enemy.getData('originalSpeed');
+                                if (originalSpeed) {
+                                    enemy.setData('speed', originalSpeed);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+
+            // 新增：背景变暗突出玩家
+            const darkness = this.scene.add.graphics();
+            darkness.setDepth(997);
+            darkness.fillStyle(0x000000, 0.5);
+            darkness.fillRect(0, 0, 800, 600);
+
+            // 创建玩家周围的光圈
+            const playerLight = this.scene.add.graphics();
+            playerLight.setDepth(998);
+
+            // 使用径向渐变（简化版：多个同心圆）
+            for (let i = 10; i > 0; i--) {
+                const alpha = 0.1 - (i * 0.008);
+                playerLight.fillStyle(0xffcc00, alpha);
+                playerLight.fillCircle(this.player.x, this.player.y, def.aoeRadius * (i / 10));
+            }
+
+            // 淡出
+            this.scene.tweens.add({
+                targets: [darkness, playerLight],
+                alpha: 0,
+                duration: def.duration,
+                onComplete: () => {
+                    darkness.destroy();
+                    playerLight.destroy();
+                }
+            });
+
             // 技能结束后取消无敌
             this.scene.time.delayedCall(def.duration, () => {
                 this.player.setData('invincible', originalInvincible);
@@ -473,6 +656,18 @@ class SkillSystem {
 
         // ============ 音效 ============
         this.scene.audioManager.playUltimate();
+
+        // 战斗音效系统（新）- 终极技能分阶段音效
+        if (this.scene.combatAudioManager) {
+            this.scene.combatAudioManager.playSkillSound('ultimate', 'start');
+
+            // 蓄力阶段音效
+            this.scene.time.delayedCall(300, () => {
+                if (this.scene.combatAudioManager) {
+                    this.scene.combatAudioManager.playSkillSound('ultimate', 'release');
+                }
+            });
+        }
     }
 
     /**

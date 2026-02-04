@@ -1139,6 +1139,15 @@ class SceneManager {
         enemy.setData('lastHitTime', 0); // 初始化攻击冷却时间
         enemy.setData('spriteKey', spriteKey);
 
+        // 设置敌人名称（用于Boss检测）
+        const enemyName = enemyDefs?.[type]?.name || type;
+        enemy.setData('name', enemyName);
+
+        // 检测是否是Boss并显示Boss血条
+        if (this.scene.bossHealthBar) {
+            this.scene.bossHealthBar.detectBoss(enemy);
+        }
+
         // Milestone 6: Add behavior flag for AI customization
         if (type === 'bat') {
             enemy.setData('behavior', 'flying');

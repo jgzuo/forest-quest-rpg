@@ -107,29 +107,80 @@ class SkillBar {
 
     /**
      * 更新冷却显示
+     * ============ US-016: 技能冷却可视化增强 ============
      */
     updateCooldown(skillKey, remaining) {
         const skillState = this.skillSystem.getSkillState(skillKey);
         const def = skillState.definition;
+        const slot = document.getElementById('skill-slot-' + skillKey);
         const overlay = document.getElementById('cooldown-overlay-' + skillKey);
         const text = document.getElementById('cooldown-text-' + skillKey);
 
-        if (!overlay || !text) return;
+        if (!slot || !overlay || !text) return;
+
+        // 记录上一次冷却状态
+        const wasOnCooldown = slot.classList.contains('on-cooldown');
 
         if (remaining > 0) {
             // 计算冷却百分比
             const percent = (remaining / def.cooldown) * 100;
             overlay.style.height = percent + '%';
 
-            // 显示冷却时间
+            // 显示冷却时间（秒）
             const seconds = Math.ceil(remaining / 1000);
             text.textContent = seconds;
             text.style.display = 'block';
+
+            // 添加冷却状态
+            if (!slot.classList.contains('on-cooldown')) {
+                slot.classList.add('on-cooldown');
+            }
+
+            // 边框颜色渐变（冷却即将结束时变绿）
+            if (remaining < 2000) {
+                slot.style.boxShadow = '0 0 10px rgba(105, 240, 174, 0.8)';
+            } else if (remaining < 4000) {
+                slot.style.boxShadow = '0 0 10px rgba(246, 224, 94, 0.6)';
+            } else {
+                slot.style.boxShadow = 'none';
+            }
         } else {
             // 冷却完成
             overlay.style.height = '0%';
             text.style.display = 'none';
+            slot.classList.remove('on-cooldown');
+            slot.style.boxShadow = 'none';
+
+            // ============ 冷却完成闪光效果 ============
+            if (wasOnCooldown) {
+                this.playCooldownReadyEffect(slot);
+            }
         }
+    }
+
+    /**
+     * US-016: 播放冷却完成闪光特效
+     */
+    playCooldownReadyEffect(slot) {
+        // 闪光动画
+        slot.style.transition = 'all 0.3s';
+        slot.style.boxShadow = '0 0 20px rgba(105, 240, 174, 1)';
+
+        // 技能图标跳动
+        const icon = slot.querySelector('.skill-icon');
+        if (icon) {
+            icon.style.transform = 'scale(1.2)';
+            icon.style.transition = 'transform 0.2s';
+
+            setTimeout(() => {
+                icon.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        // 恢复正常
+        setTimeout(() => {
+            slot.style.boxShadow = 'none';
+        }, 500);
     }
 
     /**

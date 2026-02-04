@@ -165,13 +165,46 @@ class CombatSystem {
         // 显示伤害数字
         const damageColor = isCrit ? '#ff00ff' : '#ff0000';
         const damageSize = isCrit ? 30 : 20;
-        this.showDamageNumber(enemy.x, enemy.y, finalDamage, damageColor, damageSize);
+
+        // 使用增强伤害数字系统（如果可用）
+        if (this.scene.enhancedDamageText) {
+            this.scene.enhancedDamageText.show(
+                enemy.x,
+                enemy.y,
+                finalDamage,
+                isCrit ? 'crit' : 'normal'
+            );
+
+            // 暴击时添加装备发光特效
+            if (isCrit && this.scene.equipmentEffects) {
+                this.scene.equipmentEffects.createCritWeaponGlow(this.player);
+            }
+        } else {
+            // 降级到旧系统
+            this.showDamageNumber(enemy.x, enemy.y, finalDamage, damageColor, damageSize);
+        }
 
         // 创建命中特效
         if (isCrit) {
             this.createCriticalHitEffect(enemy.x, enemy.y);
+            // 暴击时创建火花
+            if (this.scene.combatParticles) {
+                this.scene.combatParticles.createSparks(enemy.x, enemy.y, 20);
+            }
         } else {
             this.createHitEffect(enemy.x, enemy.y);
+            // 普通攻击创建血液溅射
+            if (this.scene.combatParticles) {
+                this.scene.combatParticles.createBloodSplatter(enemy.x, enemy.y, 8);
+            }
+        }
+
+        // 应用元素伤害特效（如果有技能ID）
+        if (skillId && this.scene.elementEffects && this.scene.skillSystem) {
+            const skillData = this.scene.skillSystem.getSkillData(skillId);
+            if (skillData && skillData.damageType) {
+                this.scene.elementEffects.applyEffect(skillData.damageType, enemy, finalDamage);
+            }
         }
 
         // 添加连击
@@ -188,6 +221,18 @@ class CombatSystem {
             }
         }
 
+        // ============ 战斗相机系统 ============
+        // US-008: 攻击命中相机震动 / US-012: 暴击特写效果
+        if (this.scene.combatCameraSystem) {
+            if (isCrit) {
+                // 暴击：强烈震动 + 缩放特写
+                this.scene.combatCameraSystem.onHitCrit(enemy.x, enemy.y);
+            } else {
+                // 普通命中：轻微震动
+                this.scene.combatCameraSystem.onHitNormal();
+            }
+        }
+
         // 更新敌人状态
         this.updateEnemyState(enemy);
 
@@ -199,16 +244,78 @@ class CombatSystem {
 
     /**
      * 更新敌人状态（被击中后）
+     * ============ US-018: 敌人受击反馈动画增强 ============
      */
     updateEnemyState(enemy) {
         if (!enemy) return;
 
-        // 闪烁效果
+        const isElite = enemy.getData('isElite') || false;
+        const isBoss = enemy.getData('isBoss') || false;
+
+        // 1. 闪烁效果
         enemy.setTint(0xff0000);
         this.scene.time.delayedCall(100, () => {
             if (enemy.active) {
                 enemy.clearTint();
             }
+        });
+
+        // 2. 击中缩放动画（Pop效果）
+        const originalScale = enemy.scaleX;
+        enemy.setScale(originalScale * 1.1);
+        this.scene.tweens.add({
+            targets: enemy,
+            scaleX: originalScale,
+            scaleY: originalScale,
+            duration: 150,
+            ease: 'Elastic.easeOut'
+        });
+
+        // 3. 精英/Boss特殊受击反应
+        if (isElite || isBoss) {
+            // 精英敌人受击时震动
+            this.scene.tweens.add({
+                targets: enemy,
+                x: enemy.x + Phaser.Math.Between(-3, 3),
+                y: enemy.y + Phaser.Math.Between(-3, 3),
+                duration: 100,
+                repeat: 2,
+                ease: 'Power2'
+            });
+
+            // 受击文字提示
+            if (this.scene.showFloatingText) {
+                const text = isBoss ? '💢 BOSS!' : '⚠️ 精英!';
+                this.scene.showFloatingText(enemy.x, enemy.y - 50, text, '#ff6600', 600);
+            }
+        }
+
+        // 4. 添加击退效果
+        const knockbackDistance = isBoss ? 10 : (isElite ? 15 : 20);
+        const angle = Phaser.Math.Angle.Between(
+            this.player.x,
+            this.player.y,
+            enemy.x,
+            enemy.y
+        );
+
+        const oldX = enemy.x;
+        const oldY = enemy.y;
+        const newX = enemy.x + Math.cos(angle) * knockbackDistance;
+        const newY = enemy.y + Math.sin(angle) * knockbackDistance;
+
+        // 创建击退轨迹
+        if (this.scene.combatParticles) {
+            this.scene.combatParticles.createContinuousKnockbackTrail(enemy, 200);
+        }
+
+        // 执行击退移动
+        this.scene.tweens.add({
+            targets: enemy,
+            x: newX,
+            y: newY,
+            duration: 200,
+            ease: 'Power2'
         });
     }
 
@@ -324,6 +431,25 @@ class CombatSystem {
 
         // 创建死亡特效
         this.createDeathEffect(enemy.x, enemy.y);
+
+        // 创建死亡粒子爆炸
+        if (this.scene.combatParticles) {
+            this.scene.combatParticles.createDeathExplosion(enemy.x, enemy.y, null, 25);
+        }
+
+        // 检查是否是Boss死亡，隐藏Boss血条
+        const isBoss = enemy.getData('isBoss') || false;
+        if (this.scene.bossHealthBar) {
+            const enemyName = enemy.getData('name') || enemy.name || '';
+            if (this.scene.bossHealthBar.isBoss(enemyName)) {
+                this.scene.bossHealthBar.hide();
+            }
+        }
+
+        // ============ US-010: Boss击杀相机推拉效果 ============
+        if (isBoss && this.scene.combatCameraSystem) {
+            this.scene.combatCameraSystem.onBossDeath(enemy.x, enemy.y);
+        }
 
         // 应用状态效果（如果有）
         if (this.scene.statusEffectSystem && enemy.statusEffects) {

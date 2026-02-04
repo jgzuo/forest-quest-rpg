@@ -41,6 +41,12 @@ class ComboSystem {
         // 创建连击UI
         this.createComboUI();
 
+        // 创建连击特效系统
+        if (!this.comboEffects) {
+            this.comboEffects = new ComboEffects(this.scene);
+            this.comboEffects.createUI();
+        }
+
         // 监听敌人死亡事件
         this.scene.events.on('enemyDeath', () => {
             this.incrementCombo();
@@ -114,7 +120,7 @@ class ComboSystem {
 
         // 更新最大连击
         if (this.comboCount > this.maxCombo) {
-            this.maxCombo = this.comboCombo = this.comboCount;
+            this.maxCombo = this.comboCount;
         }
 
         // 显示UI
@@ -219,6 +225,12 @@ class ComboSystem {
         } else {
             this.comboText.setFill('#ffffff'); // 白色（普通）
         }
+
+        // 同时更新连击特效系统
+        if (this.comboEffects) {
+            const remainingTime = Math.max(0, this.comboTimeout - (this.scene.time.now - this.lastHitTime));
+            this.comboEffects.updateCombo(this.comboCount, multiplier, remainingTime, this.comboTimeout);
+        }
     }
 
     /**
@@ -243,6 +255,26 @@ class ComboSystem {
             yoyo: true,
             repeat: 3
         });
+
+        // ============ US-011: 连击动态相机 ============
+        if (this.scene.combatCameraSystem) {
+            // 根据连击数应用不同的相机效果
+            if (this.comboCount >= 20) {
+                // 20+连击：强烈晃动 + 缩放脉冲
+                this.scene.combatCameraSystem.shake(100, 0.008);
+                this.scene.combatCameraSystem.zoom(1.05, 200);
+            } else if (this.comboCount >= 15) {
+                // 15+连击：中等晃动 + 轻微放大
+                this.scene.combatCameraSystem.shake(80, 0.005);
+                this.scene.combatCameraSystem.zoom(1.1, 200);
+            } else if (this.comboCount >= 10) {
+                // 10+连击：轻微晃动
+                this.scene.combatCameraSystem.shake(60, 0.005);
+            } else if (this.comboCount >= 5) {
+                // 5+连击：轻微晃动
+                this.scene.combatCameraSystem.shake(50, 0.002);
+            }
+        }
     }
 
     /**
@@ -285,6 +317,11 @@ class ComboSystem {
     update(time, delta) {
         // 检查连击超时
         this.checkComboTimeout();
+
+        // 更新连击特效
+        if (this.comboEffects) {
+            this.comboEffects.update(time, delta);
+        }
     }
 
     /**
@@ -308,6 +345,11 @@ class ComboSystem {
         this.lastHitTime = 0;
         this.updateComboDisplay();
         this.comboContainer.setAlpha(0);
+
+        // 同时重置连击特效
+        if (this.comboEffects) {
+            this.comboEffects.reset();
+        }
     }
 
     /**
@@ -317,6 +359,10 @@ class ComboSystem {
         if (this.comboContainer) {
             this.comboContainer.destroy();
             this.comboContainer = null;
+        }
+        if (this.comboEffects) {
+            this.comboEffects.destroy();
+            this.comboEffects = null;
         }
         console.log('⚔️ ComboSystem 已清理');
     }

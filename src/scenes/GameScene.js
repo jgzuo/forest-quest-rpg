@@ -123,6 +123,56 @@ class GameScene extends Phaser.Scene {
         // ============ 初始化UI ============
         this.initUI();
 
+        // ============ 🌤️ 环境特效系统初始化 ============
+        this.dayNightManager = new DayNightManager(this);
+        this.dayNightManager.createTimeUI();
+
+        this.weatherParticles = new WeatherParticles(this);
+        this.ambientParticles = new AmbientParticles(this);
+        this.lightingManager = new LightingManager(this);
+        this.lightingManager.create();
+
+        // ============ ⚔️ 战斗特效系统初始化 ============
+        this.combatParticles = new CombatParticles(this);
+        this.elementEffects = new ElementEffects(this);
+        this.bossHealthBar = new BossHealthBar(this);
+        this.enhancedDamageText = new EnhancedDamageText(this);
+        this.parryDodgeSystem = new ParryDodgeSystem(this);
+        this.equipmentEffects = new EquipmentEffects(this);
+
+        // ============ 🤖 敌人AI系统 ============
+        this.enemyAI = new EnemyAI(this);
+
+        // ============ ⚔️ 武器连招系统 ============
+        this.weaponComboSystem = new WeaponComboSystem(this);
+
+        // ============ 🎭 战斗氛围增强系统 ============
+        this.combatAtmosphereSystem = new CombatAtmosphereSystem(this);
+
+        // ============ 🚀 性能优化系统初始化 ============
+        this.particleLOD = new ParticleLOD(this);
+        this.batchRenderer = new BatchRenderer(this);
+        this.performanceMonitor = new PerformanceMonitor(this);
+
+        // ============ 🌟 Phase 4: 扩展系统初始化 ============
+        this.elementEffectsExtended = new ElementEffectsExtended(this);
+        this.bossEffects = new BossEffects(this);
+        this.skillComboSystem = new SkillComboSystem(this);
+        this.spatialPartition = new SpatialPartitionManager(this);
+
+        // 预热对象池
+        if (this.objectPool) {
+            this.objectPool.warmUp({
+                circle: 30,
+                graphics: 15,
+                rectangle: 20
+            });
+        }
+
+        if (this.lightingManager) {
+            this.playerLightId = this.lightingManager.createPlayerLight();
+        }
+
         // ============ 显示欢迎消息 ============
         this.showWelcomeMessage();
 
@@ -311,6 +361,33 @@ class GameScene extends Phaser.Scene {
             }
         });
 
+        // ============ 格挡/闪避快捷键 ============
+        // Shift: 完美格挡
+        const shiftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+
+        shiftKey.on('down', () => {
+            if (this.parryDodgeSystem) {
+                this.parryDodgeSystem.tryParry();
+            }
+        });
+
+        // Ctrl: 完美闪避
+        const ctrlKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL);
+
+        ctrlKey.on('down', () => {
+            if (this.parryDodgeSystem) {
+                this.parryDodgeSystem.tryDodge();
+            }
+        });
+
+        // ============ 性能监控快捷键 ============
+        // P: 显示/隐藏性能监控面板
+        this.input.keyboard.on('keydown-P', () => {
+            if (this.performanceMonitor) {
+                this.performanceMonitor.toggle();
+            }
+        });
+
         // ============ 技能快捷键 - Milestone 6 ============
         // 1: 旋风斩
         this.input.keyboard.on('keydown-ONE', () => {
@@ -340,13 +417,91 @@ class GameScene extends Phaser.Scene {
             }
         });
 
+        // ============ 🌤️ 环境特效快捷键 ============
+        // Shift+T: 切换天气
+        this.input.keyboard.on('keydown-SHIFT-T', () => {
+            this.cycleWeather();
+        });
+
+        // Shift+H: 快进时间（1小时）
+        this.input.keyboard.on('keydown-SHIFT-H', () => {
+            this.fastForwardTime(1);
+        });
+
         // ============ Milestone 6.3: 设置快捷键 ============
         // ESC键打开设置
         this.input.keyboard.on('keydown-ESC', () => {
             this.openSettings();
         });
 
+        // ============ 🌟 Phase 4: 调试快捷键 ============
+        // F1: 测试扩展元素特效
+        this.input.keyboard.on('keydown-F1', () => {
+            this.testExtendedElements();
+        });
+
+        // F2: 测试Boss特效
+        this.input.keyboard.on('keydown-F2', () => {
+            this.testBossEffects();
+        });
+
+        // F3: 测试技能连携
+        this.input.keyboard.on('keydown-F3', () => {
+            this.testSkillCombo();
+        });
+
         console.log('⌨️ 键盘控制设置完成');
+    }
+
+    // ============ 🌤️ 环境特效控制方法 ============
+
+    /**
+     * 设置天气
+     * @param {string} weather - 天气类型 (clear/rain/snow/fog)
+     * @param {number} intensity - 强度 (0-1)
+     */
+    setWeather(weather, intensity = 0.5) {
+        if (this.weatherParticles) {
+            this.weatherParticles.setWeather(weather, intensity);
+            this.showFloatingText(400, 100, `天气: ${weather}`, '#00ffff', 1500);
+        }
+    }
+
+    /**
+     * 循环切换天气
+     */
+    cycleWeather() {
+        const weathers = ['clear', 'rain', 'snow', 'fog'];
+        const currentWeather = this.weatherParticles ? this.weatherParticles.getCurrentWeather() : 'clear';
+        const currentIndex = weathers.indexOf(currentWeather);
+        const nextIndex = (currentIndex + 1) % weathers.length;
+        this.setWeather(weathers[nextIndex]);
+    }
+
+    /**
+     * 设置游戏时间
+     * @param {number} hours - 小时 (0-23)
+     * @param {number} minutes - 分钟 (0-59)
+     */
+    setGameTime(hours, minutes = 0) {
+        if (this.dayNightManager) {
+            this.dayNightManager.setTime(hours, minutes);
+        }
+    }
+
+    /**
+     * 快进时间
+     * @param {number} hours - 快进小时数
+     */
+    fastForwardTime(hours) {
+        if (this.dayNightManager) {
+            const currentGameTime = this.dayNightManager.getGameTime();
+            const newGameTime = (currentGameTime + hours * 60) % (24 * 60);
+            const newHours = Math.floor(newGameTime / 60);
+            const newMinutes = newGameTime % 60;
+            this.setGameTime(newHours, newMinutes);
+            this.showFloatingText(400, 100, `时间快进: +${hours}小时`, '#ffff00', 1500);
+        }
     }
 
     setupQuestEvents() {
@@ -1197,6 +1352,10 @@ class GameScene extends Phaser.Scene {
         // 初始化任务UI
         this.initQuestUI();
 
+        // ============ US-017: 战斗统计面板 ============
+        // 初始化战斗统计面板
+        this.initCombatStatsPanel();
+
         // ============ Milestone 6: Skill Bar ============
         // 初始化技能栏
         if (typeof SkillBar !== 'undefined') {
@@ -1250,6 +1409,35 @@ class GameScene extends Phaser.Scene {
         });
 
         console.log('✅ 任务UI初始化完成');
+    }
+
+    /**
+     * 初始化战斗统计面板
+     * ============ US-017: 战斗统计面板 ============
+     */
+    initCombatStatsPanel() {
+        this.combatStatsPanel = new CombatStatsPanel(this);
+
+        // 添加P键切换战斗统计
+        this.input.keyboard.on('keydown-P', () => {
+            if (this.combatStatsPanel) {
+                this.combatStatsPanel.isVisible
+                    ? this.combatStatsPanel.hide()
+                    : this.combatStatsPanel.show();
+            }
+        });
+
+        // ============ Phase 7: 战斗数据分析系统 ============
+        this.combatDataAnalyzer = new CombatDataAnalyzer(this);
+
+        // 添加O键切换数据分析面板
+        this.input.keyboard.on('keydown-O', () => {
+            if (this.combatDataAnalyzer) {
+                this.combatDataAnalyzer.toggle();
+            }
+        });
+
+        console.log('✅ 战斗统计面板初始化完成');
     }
 
     addSceneIndicator() {
@@ -1396,6 +1584,88 @@ class GameScene extends Phaser.Scene {
             this.lastUIValues.mp = currentMp;
             this.lastUIValues.maxMp = currentMaxMp;
         }
+
+        // ============ US-015: 血量低红屏警告 ============
+        const hpPercent = this.player.hp / this.player.maxHp;
+        if (hpPercent < 0.3) {
+            // 血量低于30%，显示红色警告
+            this.updateLowHealthVignette(hpPercent);
+        } else {
+            // 隐藏警告
+            this.hideLowHealthVignette();
+        }
+    }
+
+    /**
+     * US-015: 更新低血量红屏警告效果
+     * @param {number} hpPercent - HP百分比
+     */
+    updateLowHealthVignette(hpPercent) {
+        if (!this.lowHealthVignette) {
+            this.lowHealthVignette = this.add.graphics();
+            this.lowHealthVignette.setDepth(997);
+        }
+
+        // 根据HP百分比计算红色强度（HP越低越红）
+        const intensity = 1 - (hpPercent / 0.3); // 0到1
+        const alpha = 0.3 + (intensity * 0.4); // 0.3到0.7
+
+        this.lowHealthVignette.clear();
+        this.lowHealthVignette.fillStyle(0xff0000, alpha);
+        this.lowHealthVignette.fillRect(0, 0, 800, 600);
+
+        // 创建径向渐变效果（中心透明，边缘红）
+        if (!this.vignetteOverlay) {
+            this.vignetteOverlay = this.add.graphics();
+            this.vignetteOverlay.setDepth(998);
+        }
+
+        this.vignetteOverlay.clear();
+
+        // 绘制反向径向渐变（使用多个同心圆模拟）
+        const centerX = 400;
+        const centerY = 300;
+        const maxRadius = 500;
+
+        for (let i = 10; i >= 0; i--) {
+            const radius = (i / 10) * maxRadius;
+            const circleAlpha = (1 - i / 10) * intensity * 0.6;
+            this.vignetteOverlay.fillStyle(0xff0000, circleAlpha);
+            this.vignetteOverlay.fillCircle(centerX, centerY, radius);
+        }
+
+        // 中心挖空（让玩家可见）
+        this.vignetteOverlay.fillStyle(0x000000, 0);
+        this.vignetteOverlay.fillCircle(centerX, centerY, 150);
+
+        // 脉搏效果（心跳）
+        if (!this.pulseTimer) {
+            this.pulseTimer = 0;
+            this.pulseDirection = 1;
+        }
+
+        this.pulseTimer += 16 * this.pulseDirection;
+        if (this.pulseTimer >= 100) {
+            this.pulseDirection = -1;
+        } else if (this.pulseTimer <= 0) {
+            this.pulseDirection = 1;
+        }
+
+        // 脉搏缩放效果
+        const pulseScale = 1 + (this.pulseTimer / 100) * 0.1;
+        this.vignetteOverlay.setScale(pulseScale);
+    }
+
+    /**
+     * 隐藏低血量警告
+     */
+    hideLowHealthVignette() {
+        if (this.lowHealthVignette) {
+            this.lowHealthVignette.clear();
+        }
+        if (this.vignetteOverlay) {
+            this.vignetteOverlay.clear();
+        }
     }
 
     update(time, delta) {
@@ -1410,6 +1680,26 @@ class GameScene extends Phaser.Scene {
         // ============ Milestone 6.5: 更新连击系统 ============
         if (this.comboSystem) {
             this.comboSystem.update(time, delta);
+        }
+
+        // ============ Phase 4: 更新敌人AI ============
+        if (this.enemyAI) {
+            this.enemyAI.update(time, delta);
+        }
+
+        // ============ Phase 5: 更新武器连招系统 ============
+        if (this.weaponComboSystem) {
+            this.weaponComboSystem.update(time, delta);
+        }
+
+        // ============ Phase 7: 更新战斗数据分析系统 ============
+        if (this.combatDataAnalyzer) {
+            this.combatDataAnalyzer.update(time, delta);
+        }
+
+        // ============ Phase 8: 更新战斗氛围增强系统 ============
+        if (this.combatAtmosphereSystem) {
+            this.combatAtmosphereSystem.update(time, delta);
         }
 
         // ============ Milestone 7: 更新状态效果系统 ============
@@ -1427,6 +1717,66 @@ class GameScene extends Phaser.Scene {
                     }
                 });
             }
+        }
+
+        // ============ 🌤️ 环境特效系统更新 ============
+        if (this.dayNightManager) {
+            this.dayNightManager.update(delta);
+        }
+
+        if (this.weatherParticles) {
+            this.weatherParticles.update(time, delta);
+        }
+
+        if (this.lightingManager) {
+            this.lightingManager.update(time, delta);
+            if (this.player && this.playerLightId) {
+                this.lightingManager.updateLightPosition(
+                    this.playerLightId,
+                    this.player.x,
+                    this.player.y
+                );
+            }
+        }
+
+        // ============ ⚔️ 战斗特效系统更新 ============
+        if (this.combatParticles) {
+            this.combatParticles.update(time, delta);
+        }
+
+        if (this.bossHealthBar) {
+            this.bossHealthBar.update(time, delta);
+        }
+
+        // ============ ⚔️ 战斗特效系统更新 ============
+        if (this.parryDodgeSystem) {
+            this.parryDodgeSystem.update(time, delta);
+        }
+
+        if (this.equipmentEffects) {
+            this.equipmentEffects.update(time, delta);
+        }
+
+        // ============ 🚀 性能优化系统更新 ============
+        if (this.particleLOD) {
+            this.particleLOD.update(time, delta);
+        }
+
+        if (this.batchRenderer) {
+            this.batchRenderer.update(time, delta);
+        }
+
+        if (this.performanceMonitor) {
+            this.performanceMonitor.recordFrame();
+        }
+
+        // ============ 🌟 Phase 4: 扩展系统更新 ============
+        if (this.skillComboSystem) {
+            this.skillComboSystem.update(time, delta);
+        }
+
+        if (this.spatialPartition) {
+            this.spatialPartition.update(time, delta);
         }
 
         // 检查玩家是否离开传送区域（防止刚传送就触发返回）
@@ -2418,6 +2768,90 @@ class GameScene extends Phaser.Scene {
         this.showFloatingText(400, 200, '📊 统计已显示在控制台', '#68d391', 3000);
     }
 
+    // ============ 🌟 Phase 4: 调试测试方法 ============
+
+    /**
+     * 测试扩展元素特效
+     */
+    testExtendedElements() {
+        if (!this.elementEffectsExtended) return;
+
+        const testX = this.player?.x + 100 || 500;
+        const testY = this.player?.y || 300;
+
+        // 创建一个测试目标
+        const testTarget = {
+            x: testX,
+            y: testY,
+            active: true,
+            setTint: (color) => {
+                console.log(`目标染色: ${color.toString(16)}`);
+            },
+            clearTint: () => {}
+        };
+
+        // 循环测试四种元素
+        const elements = ['light', 'shadow', 'earth', 'storm'];
+        const currentElement = elements[Math.floor(Date.now() / 2000) % elements.length];
+
+        this.elementEffectsExtended.applyExtendedEffect(currentElement, testTarget, 50);
+        this.showFloatingText(testX, testY - 80, `测试: ${currentElement}`, '#ffd700', 1500);
+
+        console.log(`✨ 测试扩展元素: ${currentElement}`);
+    }
+
+    /**
+     * 测试Boss特效
+     */
+    testBossEffects() {
+        if (!this.bossEffects) return;
+
+        const testX = this.player?.x || 400;
+        const testY = this.player?.y || 300;
+
+        // 测试大招预警
+        this.bossEffects.createUltimateWarning(
+            testX + 100,
+            testY,
+            80,
+            '⚠️ 测试预警!',
+            3000
+        );
+
+        this.showFloatingText(testX, testY - 100, 'Boss特效测试', '#ff0000', 2000);
+        console.log('👑 Boss特效测试');
+    }
+
+    /**
+     * 测试技能连携系统
+     */
+    testSkillCombo() {
+        if (!this.skillComboSystem) return;
+
+        // 测试开始蓄力
+        const result = this.skillComboSystem.startCharge('whirlwind_slash');
+
+        if (result) {
+            this.showFloatingText(
+                this.player?.x || 400,
+                this.player?.y - 100 || 200,
+                '蓄力开始! 按住查看效果',
+                '#f6e05e',
+                2000
+            );
+
+            // 2秒后自动释放
+            this.time.delayedCall(2000, () => {
+                const chargeResult = this.skillComboSystem.releaseCharge();
+                if (chargeResult) {
+                    console.log('⚡ 蓄力释放:', chargeResult);
+                }
+            });
+        }
+
+        console.log('⚡ 技能连携测试');
+    }
+
     /**
      * 场景销毁时清理资源
      * 防止内存泄漏
@@ -2470,6 +2904,27 @@ class GameScene extends Phaser.Scene {
             this.events.off('questCompleted');
             this.events.off('questUpdated');
             this.events.off('bossDefeated');
+        }
+
+        // ============ 🌟 Phase 4: 清理扩展系统 ============
+        if (this.elementEffectsExtended) {
+            this.elementEffectsExtended.destroy();
+            this.elementEffectsExtended = null;
+        }
+
+        if (this.bossEffects) {
+            this.bossEffects.destroy();
+            this.bossEffects = null;
+        }
+
+        if (this.skillComboSystem) {
+            this.skillComboSystem.destroy();
+            this.skillComboSystem = null;
+        }
+
+        if (this.spatialPartition) {
+            this.spatialPartition.destroy();
+            this.spatialPartition = null;
         }
 
         console.log('✅ GameScene 资源已清理');

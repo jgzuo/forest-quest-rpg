@@ -356,7 +356,7 @@
             </div>
             <div class="control-group">
                 <h3>战斗操作</h3>
-                <kbd>空格</kbd> 攻击 | <kbd>E</kbd> 交互
+                <kbd>空格</kbd> 攻击 | <kbd>E</kbd> 交互 | <kbd>Shift</kbd> 格挡 | <kbd>Ctrl</kbd> 闪避
             </div>
             <div class="control-group">
                 <h3>技能</h3>
@@ -368,7 +368,7 @@
             </div>
             <div class="control-group">
                 <h3>系统</h3>
-                <kbd>F5</kbd> 快速保存 | <kbd>F9</kbd> 快速加载
+                <kbd>F5</kbd> 快速保存 | <kbd>F9</kbd> 快速加载 | <kbd>P</kbd> 性能监控
             </div>
         </div>
 
@@ -397,6 +397,10 @@
     <script src="src/managers/DialogueManager.js"></script>
     <!-- Data Files -->
     <script src="src/data/ConsumablesData.js"></script>
+    <!-- 🎮 战斗系统增强配置 -->
+    <script src="src/data/CombatConfig.js"></script>
+    <!-- 🔊 战斗音效系统 -->
+    <script src="src/utils/CombatAudioManager.js"></script>
     <!-- Milestone 7 Sprint 3: Equipment and Skill Tree -->
     <script src="src/data/EquipmentData.js"></script>
     <script src="src/managers/EquipmentManager.js"></script>
@@ -421,9 +425,47 @@
     <script src="src/systems/DamageTypeManager.js"></script>
     <script src="src/systems/StatusEffectSystem.js"></script>
     <script src="src/systems/CombatSystem.js"></script>
+    <!-- 🤖 敌人AI系统 -->
+    <script src="src/systems/EnemyAI.js"></script>
+    <!-- 🎭 战斗氛围增强系统 -->
+    <script src="src/systems/CombatAtmosphereSystem.js"></script>
     <script src="src/ui/SkillBar.js"></script>
     <script src="src/systems/Inventory.js"></script>
     <script src="src/ui/InventoryUI.js"></script>
+    <!-- 🐾 宠物系统 -->
+    <script src="src/entities/Pet.js"></script>
+    <script src="src/ui/PetUI.js"></script>
+    <!-- 🌤️ 环境特效系统 -->
+    <script src="src/particles/WeatherParticles.js"></script>
+    <script src="src/particles/AmbientParticles.js"></script>
+    <!-- ⚔️ 战斗特效系统 -->
+    <script src="src/particles/CombatParticles.js"></script>
+    <script src="src/effects/ElementEffects.js"></script>
+    <script src="src/effects/ComboEffects.js"></script>
+    <script src="src/effects/EnhancedDamageText.js"></script>
+    <script src="src/effects/EquipmentEffects.js"></script>
+    <script src="src/systems/ParryDodgeSystem.js"></script>
+    <script src="src/systems/CombatCameraSystem.js"></script>
+    <script src="src/ui/BossHealthBar.js"></script>
+    <!-- 📊 战斗统计面板 -->
+    <script src="src/ui/CombatStatsPanel.js"></script>
+    <!-- 📊 战斗数据分析系统 -->
+    <script src="src/ui/CombatDataAnalyzer.js"></script>
+    <!-- 🚀 性能优化系统 -->
+    <script src="src/optimization/ParticleLOD.js"></script>
+    <script src="src/optimization/BatchRenderer.js"></script>
+    <script src="src/optimization/PerformanceMonitor.js"></script>
+    <script src="src/optimization/SpatialPartition.js"></script>
+    <!-- ✨ 扩展元素特效系统 -->
+    <script src="src/effects/ElementEffectsExtended.js"></script>
+    <!-- 👑 Boss战增强特效系统 -->
+    <script src="src/effects/BossEffects.js"></script>
+    <!-- ⚡ 技能连携系统 -->
+    <script src="src/systems/SkillComboSystem.js"></script>
+    <!-- ⚔️ 武器连招系统 -->
+    <script src="src/systems/WeaponComboSystem.js"></script>
+    <script src="src/managers/DayNightManager.js"></script>
+    <script src="src/managers/LightingManager.js"></script>
     <script src="src/scenes/BootScene.js"></script>
     <script src="src/scenes/GameScene.js"></script>
     <script src="src/scenes/SettingsScene.js"></script>
