@@ -1,13 +1,10 @@
-fix: add enemy physics body configuration to prevent runaway speed
+fix: remove graphGraphics from container to prevent strokePath error
 
 Problem:
-- Enemies were running away from player instead of chasing
-- Speed was accumulating without limit due to missing maxVelocity
+- Error: Cannot read properties of null (reading 'cut')
+- Graphics objects in Container have issues with strokePath() in Phaser 3
 
 Fix:
-- Add enemy.body.setMaxVelocity(speed) to limit max speed
-- Add enemy.body.setDrag(100) for natural movement
-- Add enemy.body.setAllowGravity(false) for top-down movement
-
-This ensures enemies move at their configured speed and don't accelerate
-uncontrollably toward the player.
+- Don't add graphGraphics to container
+- Manage graphics position independently
+- This allows strokePath() to work correctly

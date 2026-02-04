@@ -332,50 +332,58 @@ class PerformanceMonitor {
      * 绘制FPS图表
      */
     drawFPSGraph() {
-        this.graphGraphics.clear();
+        if (!this.graphGraphics || !this.graphGraphics.active) {
+            return;
+        }
 
-        const graphX = 120;
-        const graphY = 35;
-        const graphWidth = 90;
-        const graphHeight = 40;
+        try {
+            this.graphGraphics.clear();
 
-        // 背景
-        this.graphGraphics.fillStyle(0x000000, 0.5);
-        this.graphGraphics.fillRect(graphX, graphY, graphWidth, graphHeight);
+            const graphX = 120;
+            const graphY = 35;
+            const graphWidth = 90;
+            const graphHeight = 40;
 
-        // 网格线
-        this.graphGraphics.lineStyle(1, 0x333333, 0.5);
-        this.graphGraphics.beginPath();
-        // 30 FPS线
-        const y30 = graphY + graphHeight - (30 / 60) * graphHeight;
-        this.graphGraphics.moveTo(graphX, y30);
-        this.graphGraphics.lineTo(graphX + graphWidth, y30);
-        // 60 FPS线
-        const y60 = graphY + graphHeight - (60 / 60) * graphHeight;
-        this.graphGraphics.moveTo(graphX, y60);
-        this.graphGraphics.lineTo(graphX + graphWidth, y60);
-        this.graphGraphics.strokePath();
+            // 背景
+            this.graphGraphics.fillStyle(0x000000, 0.5);
+            this.graphGraphics.fillRect(graphX, graphY, graphWidth, graphHeight);
 
-        // FPS曲线
-        if (this.stats.fpsHistory.length > 1) {
-            this.graphGraphics.lineStyle(2, 0x48bb78, 1);
+            // 网格线
+            this.graphGraphics.lineStyle(1, 0x333333, 0.5);
             this.graphGraphics.beginPath();
-
-            const stepX = graphWidth / (this.stats.fpsHistory.length - 1);
-
-            this.stats.fpsHistory.forEach((fps, index) => {
-                const x = graphX + index * stepX;
-                const normalizedFps = Math.min(fps, 60) / 60;
-                const y = graphY + graphHeight - normalizedFps * graphHeight;
-
-                if (index === 0) {
-                    this.graphGraphics.moveTo(x, y);
-                } else {
-                    this.graphGraphics.lineTo(x, y);
-                }
-            });
-
+            // 30 FPS线
+            const y30 = graphY + graphHeight - (30 / 60) * graphHeight;
+            this.graphGraphics.moveTo(graphX, y30);
+            this.graphGraphics.lineTo(graphX + graphWidth, y30);
+            // 60 FPS线
+            const y60 = graphY + graphHeight - (60 / 60) * graphHeight;
+            this.graphGraphics.moveTo(graphX, y60);
+            this.graphGraphics.lineTo(graphX + graphWidth, y60);
             this.graphGraphics.strokePath();
+
+            // FPS曲线
+            if (this.stats.fpsHistory.length > 1) {
+                this.graphGraphics.lineStyle(2, 0x48bb78, 1);
+                this.graphGraphics.beginPath();
+
+                const stepX = graphWidth / (this.stats.fpsHistory.length - 1);
+
+                this.stats.fpsHistory.forEach((fps, index) => {
+                    const x = graphX + index * stepX;
+                    const normalizedFps = Math.min(fps, 60) / 60;
+                    const y = graphY + graphHeight - normalizedFps * graphHeight;
+
+                    if (index === 0) {
+                        this.graphGraphics.moveTo(x, y);
+                    } else {
+                        this.graphGraphics.lineTo(x, y);
+                    }
+                });
+
+                this.graphGraphics.strokePath();
+            }
+        } catch (error) {
+            console.warn('FPS graph drawing skipped:', error.message);
         }
     }
 
