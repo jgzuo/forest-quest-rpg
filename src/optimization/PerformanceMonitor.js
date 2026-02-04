@@ -202,8 +202,10 @@ class PerformanceMonitor {
         // 估算内存使用
         this.estimateMemory();
 
-        // 更新UI
-        this.updateUI();
+        // 更新UI（只有在UI已创建时）
+        if (this.fpsText) {
+            this.updateUI();
+        }
 
         // 检查警告
         this.checkWarnings();
