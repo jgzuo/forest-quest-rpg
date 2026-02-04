@@ -275,8 +275,9 @@ class PerformanceMonitor {
      * 更新UI显示
      */
     updateUI() {
-        // 如果UI未创建，跳过更新
-        if (!this.fpsText || !this.particleText) {
+        // 如果UI未创建或任何Text对象为null，跳过更新
+        if (!this.fpsText || !this.particleText || !this.drawCallText ||
+            !this.poolText || !this.memoryText) {
             return;
         }
 
