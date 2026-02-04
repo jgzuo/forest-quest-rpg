@@ -13,7 +13,7 @@
  */
 
 // ============ 音效系统配置 ============
-export const AUDIO_CONFIG = {
+const AUDIO_CONFIG = {
     // 主音量
     masterVolume: 0.5,
     sfxVolume: 0.6,
@@ -51,7 +51,7 @@ export const AUDIO_CONFIG = {
 };
 
 // ============ 相机系统配置 ============
-export const CAMERA_CONFIG = {
+const CAMERA_CONFIG = {
     // 震动强度
     shake: {
         normal: { intensity: 0.005, duration: 100 },
@@ -92,7 +92,7 @@ export const CAMERA_CONFIG = {
 };
 
 // ============ 连击系统配置 ============
-export const COMBO_CONFIG = {
+const COMBO_CONFIG = {
     // 连击超时（毫秒）
     timeout: 3000,
 
@@ -121,7 +121,7 @@ export const COMBO_CONFIG = {
 };
 
 // ============ 武器连招系统配置 ============
-export const WEAPON_COMBO_CONFIG = {
+const WEAPON_COMBO_CONFIG = {
     // 连击超时
     timeout: 2000,
 
@@ -145,7 +145,7 @@ export const WEAPON_COMBO_CONFIG = {
 };
 
 // ============ 环境连招系统配置 ============
-export const ENVIRONMENT_COMBO_CONFIG = {
+const ENVIRONMENT_COMBO_CONFIG = {
     // 撞墙伤害倍数
     wallSlamMultiplier: 1.5,
 
@@ -160,7 +160,7 @@ export const ENVIRONMENT_COMBO_CONFIG = {
 };
 
 // ============ 空中连招系统配置 ============
-export const AERIAL_COMBO_CONFIG = {
+const AERIAL_COMBO_CONFIG = {
     // 浮空重力系数（越小浮空越久）
     gravity: 0.3,
 
@@ -179,7 +179,7 @@ export const AERIAL_COMBO_CONFIG = {
 };
 
 // ============ 敌人AI配置 ============
-export const ENEMY_AI_CONFIG = {
+const ENEMY_AI_CONFIG = {
     // 仇恨范围
     aggroRange: 150,
 
@@ -230,7 +230,7 @@ export const ENEMY_AI_CONFIG = {
 };
 
 // ============ 装备特效配置 ============
-export const EQUIPMENT_EFFECT_CONFIG = {
+const EQUIPMENT_EFFECT_CONFIG = {
     // 稀有度属性
     rarity: {
         common: { color: 0xffffff, glow: false, trail: false },
@@ -277,7 +277,7 @@ export const EQUIPMENT_EFFECT_CONFIG = {
 };
 
 // ============ 技能系统配置 ============
-export const SKILL_CONFIG = {
+const SKILL_CONFIG = {
     // 技能连携
     chains: {
         comboWindow: 3000, // 连携时间窗口（毫秒）
@@ -310,7 +310,7 @@ export const SKILL_CONFIG = {
 };
 
 // ============ UI系统配置 ============
-export const UI_CONFIG = {
+const UI_CONFIG = {
     // 伤害数字
     damageText: {
         gridSize: { width: 40, height: 30 },
@@ -335,7 +335,7 @@ export const UI_CONFIG = {
 };
 
 // ============ 数据分析配置 ============
-export const ANALYTICS_CONFIG = {
+const ANALYTICS_CONFIG = {
     // DPS计算
     dps: {
         windows: [5000, 10000, 30000], // 5s, 10s, 30s窗口
@@ -359,7 +359,7 @@ export const ANALYTICS_CONFIG = {
 };
 
 // ============ Boss战配置 ============
-export const BOSS_CONFIG = {
+const BOSS_CONFIG = {
     // 阶段
     phases: {
         phase1: { healthPercent: [1.0, 0.66], speedMultiplier: 1.0 },
@@ -382,7 +382,7 @@ export const BOSS_CONFIG = {
 };
 
 // ============ 环境特效配置 ============
-export const ATMOSPHERE_CONFIG = {
+const ATMOSPHERE_CONFIG = {
     // 血迹残留
     bloodStains: {
         maxCount: 20,
@@ -409,7 +409,7 @@ export const ATMOSPHERE_CONFIG = {
 };
 
 // ============ 导出所有配置 ============
-export const COMBAT_CONFIG = {
+const COMBAT_CONFIG = {
     audio: AUDIO_CONFIG,
     camera: CAMERA_CONFIG,
     combo: COMBO_CONFIG,
@@ -425,5 +425,21 @@ export const COMBAT_CONFIG = {
     atmosphere: ATMOSPHERE_CONFIG
 };
 
-// 默认导出（便于导入）
-export default COMBAT_CONFIG;
+// ============ 将所有配置导出到全局（用于传统script标签加载）============
+if (typeof window !== 'undefined') {
+    window.AUDIO_CONFIG = AUDIO_CONFIG;
+    window.CAMERA_CONFIG = CAMERA_CONFIG;
+    window.COMBO_CONFIG = COMBO_CONFIG;
+    window.WEAPON_COMBO_CONFIG = WEAPON_COMBO_CONFIG;
+    window.ENVIRONMENT_COMBO_CONFIG = ENVIRONMENT_COMBO_CONFIG;
+    window.AERIAL_COMBO_CONFIG = AERIAL_COMBO_CONFIG;
+    window.ENEMY_AI_CONFIG = ENEMY_AI_CONFIG;
+    window.EQUIPMENT_EFFECT_CONFIG = EQUIPMENT_EFFECT_CONFIG;
+    window.SKILL_CONFIG = SKILL_CONFIG;
+    window.UI_CONFIG = UI_CONFIG;
+    window.ANALYTICS_CONFIG = ANALYTICS_CONFIG;
+    window.BOSS_CONFIG = BOSS_CONFIG;
+    window.ATMOSPHERE_CONFIG = ATMOSPHERE_CONFIG;
+    window.COMBAT_CONFIG = COMBAT_CONFIG;
+}
+
