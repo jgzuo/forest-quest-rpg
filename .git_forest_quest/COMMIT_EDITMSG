@@ -1,8 +1,11 @@
-fix: 修复PerformanceMonitor语法错误
+fix: remove conflicting enemy movement logic from EnemyAI
 
-- 修复updateUI()函数缩进错误
-- 将drawFPSGraph()调用移到try-catch块内部
-- 修复 'Unexpected token this' 语法错误
-- 现在PerformanceMonitor可以正确加载
+The new EnemyAI system was conflicting with the original GameScene enemy
+movement logic, causing enemies to stop at 50px and not attack the player.
 
-Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+Fix:
+- Removed moveToPlayer() call from EnemyAI.updateEnemyAI()
+- EnemyAI now only handles elite special attacks and boss phases
+- Basic enemy movement is handled by original GameScene logic
+
+Resolves: 敌人跑掉而不是跟玩家战斗的问题

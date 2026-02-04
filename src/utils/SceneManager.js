@@ -1129,6 +1129,18 @@ class SceneManager {
             return;
         }
 
+        // ============ 物理属性配置 ============
+        // 重要：设置最大速度限制，防止敌人速度累积过快
+        enemy.body.setMaxVelocity(speed);
+
+        // 设置阻力（拖尾效果），让敌人移动更自然
+        // 值越大，停止越快；值越小，滑行越远
+        enemy.body.setDrag(100); // 适度阻力
+
+        // 禁用重力（敌人不受重力影响）
+        enemy.body.setAllowGravity(false);
+
+        // ============ 设置敌人数据 ============
         enemy.setData('type', type);
         enemy.setData('hp', hp);
         enemy.setData('maxHp', hp);
