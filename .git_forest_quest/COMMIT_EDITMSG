@@ -1,0 +1,8 @@
+fix: 修复PerformanceMonitor语法错误
+
+- 修复updateUI()函数缩进错误
+- 将drawFPSGraph()调用移到try-catch块内部
+- 修复 'Unexpected token this' 语法错误
+- 现在PerformanceMonitor可以正确加载
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>

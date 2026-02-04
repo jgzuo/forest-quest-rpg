@@ -1,0 +1,10 @@
+0000000000000000000000000000000000000000 bada4889f1f0af06d704b4eaf5e0d66a587eea32 Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1769564001 +0800	commit (initial): Initial commit: Forest Quest RPG v1.9.4
+bada4889f1f0af06d704b4eaf5e0d66a587eea32 3982c8b4593b8a0b2ede76fab1068e01f44fb5a6 Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770190088 +0800	commit: feat: 战斗系统全面增强 - v1.9.7
+3982c8b4593b8a0b2ede76fab1068e01f44fb5a6 75ad861d906159512b673560b7883e180c36c0af Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770190102 +0800	commit: docs: 添加系统文档和规划文件
+75ad861d906159512b673560b7883e180c36c0af ccb14d5232d16e837d291bea19d02ee8f1c274cc Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770190343 +0800	commit: fix: 修复CombatConfig全局变量导出问题
+ccb14d5232d16e837d291bea19d02ee8f1c274cc 8c6b0b80307876c19689857d452e745374a41250 Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770190476 +0800	commit: fix: 修复CombatDataAnalyzer性能监控方法调用
+8c6b0b80307876c19689857d452e745374a41250 d0e9a43c72e2b717ace157392b659eb22784b419 Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770190660 +0800	commit: fix: 修复运行时null引用错误
+d0e9a43c72e2b717ace157392b659eb22784b419 66e4b6f1646d8c280c17a1bcf354dfa5c9c22c4e Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770190799 +0800	commit: fix: 完善PerformanceMonitor的null检查
+66e4b6f1646d8c280c17a1bcf354dfa5c9c22c4e ae1860e169337b70f485d15706f99e1d4a353de6 Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770190945 +0800	commit: fix: 为PerformanceMonitor添加try-catch保护
+ae1860e169337b70f485d15706f99e1d4a353de6 e322ff072ec60600950aeeff890f9b465a136b25 Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770190972 +0800	commit: fix: 只有在UI创建后才更新PerformanceMonitor
+e322ff072ec60600950aeeff890f9b465a136b25 e3a262142b47ef6b40e797940ad60569a96e53f5 Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770191119 +0800	commit: fix: 修复PerformanceMonitor语法错误

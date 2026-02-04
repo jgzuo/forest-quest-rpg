@@ -119,10 +119,9 @@ class EnemyAI {
             this.updateEliteAttack(enemy, specialAbility, distance, time);
         }
 
-        // 基础AI：追踪玩家
-        if (distance < this.config.aggroRange && distance > this.config.attackRange) {
-            this.moveToPlayer(enemy);
-        }
+        // 注意：基础移动由GameScene.js的原始逻辑处理
+        // EnemyAI系统只负责精英特殊攻击和Boss多阶段行为
+        // 不在这里调用moveToPlayer()，避免与原始移动逻辑冲突
 
         // 格挡/闪避反应（US-022）
         if (this.shouldBlockOrDodge(enemy)) {
