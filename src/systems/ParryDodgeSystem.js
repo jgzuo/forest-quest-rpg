@@ -70,8 +70,10 @@ class ParryDodgeSystem {
         // 视觉特效：格挡姿势
         this.createParryStanceEffect();
 
-        // 播放格挡音效
-        if (this.scene.audioManager) {
+        // 播放格挡音效（如果存在combatAudioManager）
+        if (this.scene.combatAudioManager && this.scene.combatAudioManager.playParryDodgeSound) {
+            this.scene.combatAudioManager.playParryDodgeSound('parry');
+        } else if (this.scene.audioManager && this.scene.audioManager.playParryStance) {
             this.scene.audioManager.playParryStance();
         }
 
@@ -140,8 +142,10 @@ class ParryDodgeSystem {
             }
         });
 
-        // 播放闪避音效
-        if (this.scene.audioManager) {
+        // 播放闪避音效（如果存在combatAudioManager）
+        if (this.scene.combatAudioManager && this.scene.combatAudioManager.playParryDodgeSound) {
+            this.scene.combatAudioManager.playParryDodgeSound('dodge');
+        } else if (this.scene.audioManager && this.scene.audioManager.playDodge) {
             this.scene.audioManager.playDodge();
         }
 
@@ -180,13 +184,8 @@ class ParryDodgeSystem {
             // 显示完美格挡文字
             this.showPerfectParryText();
 
-            // 播放完美格挡音效
-            if (this.scene.audioManager) {
-                this.scene.audioManager.playPerfectParry();
-            }
-
             // 战斗音效系统（新）- 完美格挡
-            if (this.scene.combatAudioManager) {
+            if (this.scene.combatAudioManager && this.scene.combatAudioManager.playPerfectParry) {
                 this.scene.combatAudioManager.playPerfectParry();
             }
 
@@ -224,13 +223,8 @@ class ParryDodgeSystem {
             // 显示完美闪避文字
             this.showPerfectDodgeText();
 
-            // 播放完美闪避音效
-            if (this.scene.audioManager) {
-                this.scene.audioManager.playPerfectDodge();
-            }
-
             // 战斗音效系统（新）- 完美闪避
-            if (this.scene.combatAudioManager) {
+            if (this.scene.combatAudioManager && this.scene.combatAudioManager.playPerfectDodge) {
                 this.scene.combatAudioManager.playPerfectDodge();
             }
 

@@ -275,6 +275,11 @@ class PerformanceMonitor {
      * 更新UI显示
      */
     updateUI() {
+        // 如果UI未创建，跳过更新
+        if (!this.fpsText || !this.particleText) {
+            return;
+        }
+
         // FPS颜色根据性能变化
         let fpsColor = '#48bb78'; // 绿色
         if (this.stats.fps < 50) fpsColor = '#f6e05e'; // 黄色
