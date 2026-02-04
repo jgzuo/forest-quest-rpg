@@ -9,3 +9,4 @@ d0e9a43c72e2b717ace157392b659eb22784b419 66e4b6f1646d8c280c17a1bcf354dfa5c9c22c4
 ae1860e169337b70f485d15706f99e1d4a353de6 e322ff072ec60600950aeeff890f9b465a136b25 Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770190972 +0800	commit: fix: 只有在UI创建后才更新PerformanceMonitor
 e322ff072ec60600950aeeff890f9b465a136b25 e3a262142b47ef6b40e797940ad60569a96e53f5 Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770191119 +0800	commit: fix: 修复PerformanceMonitor语法错误
 e3a262142b47ef6b40e797940ad60569a96e53f5 18663fc79d329cf6d8b885637e5277464ba7c95c Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770191396 +0800	commit: fix: remove conflicting enemy movement logic from EnemyAI
+18663fc79d329cf6d8b885637e5277464ba7c95c 7ad9ba12799d6cd4f06beb0928a982fe610bb6d5 Jianguang ZUO <zuojg@JianguangdeMacBook-Air.local> 1770191628 +0800	commit: fix: add enemy physics body configuration to prevent runaway speed

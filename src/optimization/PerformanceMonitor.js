@@ -153,9 +153,12 @@ class PerformanceMonitor {
 
         // FPS图表
         if (this.config.showGraph) {
+            // 不将Graphics添加到Container，直接添加到Scene
+            // 因为Graphics在Container中调用strokePath()会出错
             this.graphGraphics = this.scene.add.graphics();
             this.graphGraphics.setDepth(1001);
-            this.container.add(this.graphGraphics);
+            // 不添加到container，单独管理位置
+            this.graphGraphics.setPosition(10, 100); // 对应container的位置
         }
 
         // 默认隐藏（按P键切换）

@@ -1,11 +1,13 @@
-fix: remove conflicting enemy movement logic from EnemyAI
+fix: add enemy physics body configuration to prevent runaway speed
 
-The new EnemyAI system was conflicting with the original GameScene enemy
-movement logic, causing enemies to stop at 50px and not attack the player.
+Problem:
+- Enemies were running away from player instead of chasing
+- Speed was accumulating without limit due to missing maxVelocity
 
 Fix:
-- Removed moveToPlayer() call from EnemyAI.updateEnemyAI()
-- EnemyAI now only handles elite special attacks and boss phases
-- Basic enemy movement is handled by original GameScene logic
+- Add enemy.body.setMaxVelocity(speed) to limit max speed
+- Add enemy.body.setDrag(100) for natural movement
+- Add enemy.body.setAllowGravity(false) for top-down movement
 
-Resolves: 敌人跑掉而不是跟玩家战斗的问题
+This ensures enemies move at their configured speed and don't accelerate
+uncontrollably toward the player.
