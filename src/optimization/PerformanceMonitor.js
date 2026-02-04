@@ -275,42 +275,48 @@ class PerformanceMonitor {
      * 更新UI显示
      */
     updateUI() {
-        // 如果UI未创建或任何Text对象为null，跳过更新
-        if (!this.fpsText || !this.particleText || !this.drawCallText ||
-            !this.poolText || !this.memoryText) {
-            return;
+        try {
+            // 如果UI未创建或任何Text对象为null，跳过更新
+            if (!this.fpsText || !this.particleText || !this.drawCallText ||
+                !this.poolText || !this.memoryText) {
+                return;
+            }
+
+            // FPS颜色根据性能变化
+            let fpsColor = '#48bb78'; // 绿色
+            if (this.stats.fps < 50) fpsColor = '#f6e05e'; // 黄色
+            if (this.stats.fps < 30) fpsColor = '#ff6b6b'; // 红色
+
+            this.fpsText.setText(`FPS: ${this.stats.fps} [${this.stats.avgFps}]`);
+            this.fpsText.setFill(fpsColor);
+
+            // 粒子数量
+            let particleColor = '#ffffff';
+            if (this.stats.particleCount > 300) particleColor = '#f6e05e';
+            if (this.stats.particleCount > 500) particleColor = '#ff6b6b';
+
+            this.particleText.setText(`Particles: ${this.stats.particleCount}`);
+            this.particleText.setFill(particleColor);
+
+            // Draw Calls
+            this.drawCallText.setText(`Draw Calls: ${this.stats.drawCalls}`);
+
+            // 对象池
+            const poolStats = this.stats.objectPoolStats.totals || { active: 0, pooled: 0 };
+            this.poolText.setText(`Pool: ${poolStats.active}/${poolStats.total || 0}`);
+
+            // 内存
+            let memoryColor = '#ffffff';
+            if (this.stats.memoryEstimate > 50) memoryColor = '#f6e05e';
+            if (this.stats.memoryEstimate > 100) memoryColor = '#ff6b6b';
+
+            this.memoryText.setText(`Memory: ~${this.stats.memoryEstimate} MB`);
+            this.memoryText.setFill(memoryColor);
+        } catch (error) {
+            // 静默失败，避免错误中断游戏
+            console.warn('PerformanceMonitor UI update skipped:', error.message);
         }
-
-        // FPS颜色根据性能变化
-        let fpsColor = '#48bb78'; // 绿色
-        if (this.stats.fps < 50) fpsColor = '#f6e05e'; // 黄色
-        if (this.stats.fps < 30) fpsColor = '#ff6b6b'; // 红色
-
-        this.fpsText.setText(`FPS: ${this.stats.fps} [${this.stats.avgFps}]`);
-        this.fpsText.setFill(fpsColor);
-
-        // 粒子数量
-        let particleColor = '#ffffff';
-        if (this.stats.particleCount > 300) particleColor = '#f6e05e';
-        if (this.stats.particleCount > 500) particleColor = '#ff6b6b';
-
-        this.particleText.setText(`Particles: ${this.stats.particleCount}`);
-        this.particleText.setFill(particleColor);
-
-        // Draw Calls
-        this.drawCallText.setText(`Draw Calls: ${this.stats.drawCalls}`);
-
-        // 对象池
-        const poolStats = this.stats.objectPoolStats.totals || { active: 0, pooled: 0 };
-        this.poolText.setText(`Pool: ${poolStats.active}/${poolStats.total || 0}`);
-
-        // 内存
-        let memoryColor = '#ffffff';
-        if (this.stats.memoryEstimate > 50) memoryColor = '#f6e05e';
-        if (this.stats.memoryEstimate > 100) memoryColor = '#ff6b6b';
-
-        this.memoryText.setText(`Memory: ~${this.stats.memoryEstimate} MB`);
-        this.memoryText.setFill(memoryColor);
+    }
 
         // 绘制FPS图表
         if (this.config.showGraph && this.graphGraphics) {
