@@ -314,15 +314,14 @@ class PerformanceMonitor {
 
             this.memoryText.setText(`Memory: ~${this.stats.memoryEstimate} MB`);
             this.memoryText.setFill(memoryColor);
+
+            // 绘制FPS图表
+            if (this.config.showGraph && this.graphGraphics) {
+                this.drawFPSGraph();
+            }
         } catch (error) {
             // 静默失败，避免错误中断游戏
             console.warn('PerformanceMonitor UI update skipped:', error.message);
-        }
-    }
-
-        // 绘制FPS图表
-        if (this.config.showGraph && this.graphGraphics) {
-            this.drawFPSGraph();
         }
     }
 
