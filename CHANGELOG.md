@@ -1,5 +1,36 @@
 # Forest Quest RPG - 更新日志
 
+## v1.9.8 (2026-02-04)
+
+### 🐛 Bug修复批次
+
+**修复1: 敌人AI移动逻辑冲突**
+- 问题: 新EnemyAI系统与原始GameScene移动逻辑冲突
+- 表现: 敌人停止在50px外不攻击玩家
+- 修复: 移除EnemyAI中的基础移动逻辑，只保留精英特殊攻击
+- 提交: 18663fc
+
+**修复2: 敌人物理属性缺失**
+- 问题: 敌人创建时缺少物理body配置，导致速度无限累积
+- 表现: 敌人"逃跑"（速度越来越快）
+- 修复: 添加setMaxVelocity()、setDrag()、setAllowGravity(false)
+- 提交: 7ad9ba1
+
+**修复3: PerformanceMonitor Graphics错误**
+- 问题: Graphics对象在Container中调用strokePath()报错
+- 表现: "Cannot read properties of null (reading 'cut')"
+- 修复: 将graphGraphics从container中移出，独立管理
+- 提交: 6eb9ca6, 745d46c
+
+**测试清单**:
+- [x] 敌人正常追踪玩家
+- [x] 敌人到达碰撞距离后攻击
+- [x] 不同敌人类型速度正确（蝙蝠90、鼹鼠50、树妖30）
+- [x] PerformanceMonitor无报错
+- [x] 按P键可正常显示/隐藏性能面板
+
+---
+
 ## v1.9.7 (2026-02-04)
 
 ### ⚔️ 战斗系统全面增强 - 45个用户故事完成
