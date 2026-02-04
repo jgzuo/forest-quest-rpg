@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宠物精灵图生成器 - Forest Quest RPG</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #00ffff;
+            text-align: center;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .sprite-preview {
+            background: #16213e;
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        .sprite-preview h3 {
+            color: #00ffff;
+            margin-top: 0;
+        }
+        canvas {
+            background: #000;
+            border: 1px solid #333;
+            margin: 10px 0;
+            image-rendering: pixelated;
+        }
+        button {
+            background: #00ffff;
+            color: #1a1a2e;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+        }
+        button:hover {
+            background: #00cccc;
+        }
+        .download-btn {
+            background: #4ecdc4;
+        }
+        .info {
+            background: #16213e;
+            border-left: 4px solid #00ffff;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .all-sprites {
+            background: #16213e;
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🐾 宠物精灵图生成器</h1>
+
+    <div class="info">
+        <p>这个工具生成不同风格的宠物精灵图，用于 Forest Quest RPG 游戏中的宠物系统。</p>
+        <p><strong>使用方法：</strong></p>
+        <ol>
+            <li>选择你喜欢的宠物风格</li>
+            <li>点击"下载精灵图"按钮</li>
+            <li>将下载的PNG文件保存到 <code>assets/characters/</code> 目录</li>
+            <li>在游戏中加载并使用</li>
+        </ol>
+    </div>
+
+    <div class="container">
+        <!-- 精灵图 1: 发光小精灵 -->
+        <div class="sprite-preview">
+            <h3>✨ 发光小精灵</h3>
+            <canvas id="spirit-pet" width="32" height="32"></canvas>
+            <button onclick="drawSpiritPet()">重新生成</button>
+            <button class="download-btn" onclick="downloadSprite('spirit-pet', 'pet-spirit.png')">下载</button>
+        </div>
+
+        <!-- 精灵图 2: 元素之灵 -->
+        <div class="sprite-preview">
+            <h3>🔥 元素之灵</h3>
+            <canvas id="elemental-pet" width="32" height="32"></canvas>
+            <button onclick="drawElementalPet()">重新生成</button>
+            <button class="download-btn" onclick="downloadSprite('elemental-pet', 'pet-elemental.png')">下载</button>
+        </div>
+
+        <!-- 精灵图 3: 星空精灵 -->
+        <div class="sprite-preview">
+            <h3>⭐ 星空精灵</h3>
+            <canvas id="star-pet" width="32" height="32"></canvas>
+            <button onclick="drawStarPet()">重新生成</button>
+            <button class="download-btn" onclick="downloadSprite('star-pet', 'pet-star.png')">下载</button>
+        </div>
+
+        <!-- 精灵图 4: 自然之灵 -->
+        <div class="sprite-preview">
+            <h3>🍃 自然之灵</h3>
+            <canvas id="nature-pet" width="32" height="32"></canvas>
+            <button onclick="drawNaturePet()">重新生成</button>
+            <button class="download-btn" onclick="downloadSprite('nature-pet', 'pet-nature.png')">下载</button>
+        </div>
+
+        <!-- 精灵图 5: 能量球 -->
+        <div class="sprite-preview">
+            <h3>💠 能量球</h3>
+            <canvas id="orb-pet" width="32" height="32"></canvas>
+            <button onclick="drawOrbPet()">重新生成</button>
+            <button class="download-btn" onclick="downloadSprite('orb-pet', 'pet-orb.png')">下载</button>
+        </div>
+
+        <!-- 精灵图 6: 魔法阵 -->
+        <div class="sprite-preview">
+            <h3>🔮 魔法阵</h3>
+            <canvas id="magic-pet" width="32" height="32"></canvas>
+            <button onclick="drawMagicPet()">重新生成</button>
+            <button class="download-btn" onclick="downloadSprite('magic-pet', 'pet-magic.png')">下载</button>
+        </div>
+    </div>
+
+    <div class="all-sprites">
+        <h2 style="color: #00ffff;">精灵图拼接预览</h2>
+        <p>所有精灵图合并为一张精灵表（用于精灵动画）</p>
+        <canvas id="sprite-sheet" width="192" height="32" style="background: #000; margin: 20px auto; display: block;"></canvas>
+        <button onclick="generateSpriteSheet()">生成精灵表</button>
+        <button class="download-btn" onclick="downloadSprite('sprite-sheet', 'pet-spritesheet.png')">下载精灵表</button>
+    </div>
+
+    <script>
+        // 绘制发光小精灵
+        function drawSpiritPet() {
+            const canvas = document.getElementById('spirit-pet');
+            const ctx = canvas.getContext('2d');
+
+            // 清空画布
+            ctx.clearRect(0, 0, 32, 32);
+
+            // 外层光晕
+            ctx.fillStyle = 'rgba(0, 255, 255, 0.3)';
+            ctx.beginPath();
+            ctx.arc(16, 16, 14, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 中层光圈
+            ctx.fillStyle = 'rgba(0, 255, 255, 0.6)';
+            ctx.beginPath();
+            ctx.arc(16, 16, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 核心
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(16, 16, 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 眼睛
+            ctx.fillStyle = '#1a1a2e';
+            ctx.beginPath();
+            ctx.arc(13, 14, 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(19, 14, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 微笑
+            ctx.strokeStyle = '#1a1a2e';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(16, 17, 3, 0.2, Math.PI - 0.2);
+            ctx.stroke();
+        }
+
+        // 绘制元素之灵
+        function drawElementalPet() {
+            const canvas = document.getElementById('elemental-pet');
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, 32, 32);
+
+            // 火焰外层
+            ctx.fillStyle = 'rgba(255, 100, 0, 0.4)';
+            ctx.beginPath();
+            ctx.moveTo(16, 4);
+            ctx.quadraticCurveTo(24, 12, 28, 16);
+            ctx.quadraticCurveTo(24, 20, 16, 28);
+            ctx.quadraticCurveTo(8, 20, 4, 16);
+            ctx.quadraticCurveTo(8, 12, 16, 4);
+            ctx.fill();
+
+            // 内层火焰
+            ctx.fillStyle = 'rgba(255, 200, 0, 0.7)';
+            ctx.beginPath();
+            ctx.moveTo(16, 8);
+            ctx.quadraticCurveTo(22, 14, 24, 16);
+            ctx.quadraticCurveTo(22, 18, 16, 24);
+            ctx.quadraticCurveTo(10, 18, 8, 16);
+            ctx.quadraticCurveTo(10, 14, 16, 8);
+            ctx.fill();
+
+            // 核心
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(16, 16, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 眼睛
+            ctx.fillStyle = '#ff6600';
+            ctx.beginPath();
+            ctx.arc(14, 15, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(18, 15, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // 绘制星空精灵
+        function drawStarPet() {
+            const canvas = document.getElementById('star-pet');
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, 32, 32);
+
+            // 光晕
+            ctx.fillStyle = 'rgba(255, 215, 0, 0.3)';
+            ctx.beginPath();
+            ctx.arc(16, 16, 14, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 星形主体
+            ctx.fillStyle = '#ffd700';
+            drawStar(ctx, 16, 16, 5, 11, 5);
+
+            // 内星
+            ctx.fillStyle = '#ffec8b';
+            drawStar(ctx, 16, 16, 5, 7, 3);
+
+            // 眼睛
+            ctx.fillStyle = '#1a1a2e';
+            ctx.beginPath();
+            ctx.arc(13, 15, 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(19, 15, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 闪光点
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(16, 11, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // 绘制自然之灵
+        function drawNaturePet() {
+            const canvas = document.getElementById('nature-pet');
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, 32, 32);
+
+            // 叶片光晕
+            ctx.fillStyle = 'rgba(76, 175, 80, 0.3)';
+            ctx.beginPath();
+            ctx.arc(16, 16, 14, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 叶片外层
+            ctx.fillStyle = '#4caf50';
+            for (let i = 0; i < 6; i++) {
+                const angle = (i * 60) * Math.PI / 180;
+                const x = 16 + Math.cos(angle) * 8;
+                const y = 16 + Math.sin(angle) * 8;
+
+                ctx.beginPath();
+                ctx.ellipse(x, y, 5, 3, angle, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // 中心
+            ctx.fillStyle = '#81c784';
+            ctx.beginPath();
+            ctx.arc(16, 16, 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 核心
+            ctx.fillStyle = '#c5e1a5';
+            ctx.beginPath();
+            ctx.arc(16, 16, 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // 绘制能量球
+        function drawOrbPet() {
+            const canvas = document.getElementById('orb-pet');
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, 32, 32);
+
+            // 外层能量场
+            const gradient = ctx.createRadialGradient(16, 16, 0, 16, 16, 14);
+            gradient.addColorStop(0, 'rgba(156, 39, 176, 0.8)');
+            gradient.addColorStop(0.5, 'rgba(156, 39, 176, 0.4)');
+            gradient.addColorStop(1, 'rgba(156, 39, 176, 0)');
+
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(16, 16, 14, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 内核
+            ctx.fillStyle = '#9c27b0';
+            ctx.beginPath();
+            ctx.arc(16, 16, 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 高光
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.beginPath();
+            ctx.arc(13, 13, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 能量环
+            ctx.strokeStyle = '#e1bee7';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(16, 16, 10, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        // 绘制魔法阵
+        function drawMagicPet() {
+            const canvas = document.getElementById('magic-pet');
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, 32, 32);
+
+            // 外圈
+            ctx.strokeStyle = '#7c4dff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(16, 16, 12, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // 内圈
+            ctx.strokeStyle = '#b388ff';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(16, 16, 8, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // 符文
+            ctx.fillStyle = '#7c4dff';
+            for (let i = 0; i < 4; i++) {
+                const angle = (i * 90 + 45) * Math.PI / 180;
+                const x = 16 + Math.cos(angle) * 10;
+                const y = 16 + Math.sin(angle) * 10;
+
+                ctx.beginPath();
+                ctx.arc(x, y, 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // 核心
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(16, 16, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 旋转符号
+            ctx.strokeStyle = '#b388ff';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(16, 8);
+            ctx.lineTo(16, 12);
+            ctx.moveTo(16, 20);
+            ctx.lineTo(16, 24);
+            ctx.moveTo(8, 16);
+            ctx.lineTo(12, 16);
+            ctx.moveTo(20, 16);
+            ctx.lineTo(24, 16);
+            ctx.stroke();
+        }
+
+        // 绘制星形的辅助函数
+        function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
+            let rot = Math.PI / 2 * 3;
+            let x = cx;
+            let y = cy;
+            const step = Math.PI / spikes;
+
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - outerRadius);
+
+            for (let i = 0; i < spikes; i++) {
+                x = cx + Math.cos(rot) * outerRadius;
+                y = cy + Math.sin(rot) * outerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+
+                x = cx + Math.cos(rot) * innerRadius;
+                y = cy + Math.sin(rot) * innerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+            }
+
+            ctx.lineTo(cx, cy - outerRadius);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // 生成精灵表
+        function generateSpriteSheet() {
+            const canvas = document.getElementById('sprite-sheet');
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, 192, 32);
+
+            // 复制所有精灵到一个画布
+            const sprites = ['spirit-pet', 'elemental-pet', 'star-pet', 'nature-pet', 'orb-pet', 'magic-pet'];
+            sprites.forEach((spriteId, index) => {
+                const spriteCanvas = document.getElementById(spriteId);
+                ctx.drawImage(spriteCanvas, index * 32, 0);
+            });
+        }
+
+        // 下载精灵图
+        function downloadSprite(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const url = canvas.toDataURL('image/png');
+
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = url;
+            link.click();
+        }
+
+        // 页面加载时绘制所有精灵图
+        window.onload = function() {
+            drawSpiritPet();
+            drawElementalPet();
+            drawStarPet();
+            drawNaturePet();
+            drawOrbPet();
+            drawMagicPet();
+            generateSpriteSheet();
+        };
+    </script>
+</body>
+</html>
