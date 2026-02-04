@@ -607,10 +607,11 @@ class CombatDataAnalyzer {
      */
     update(time, delta) {
         // 自动记录性能数据（如果存在performanceMonitor）
-        if (this.scene.performanceMonitor) {
-            const fps = this.scene.performanceMonitor.getCurrentFPS();
-            const particleCount = this.scene.performanceMonitor.getParticleCount();
-            const memory = this.scene.performanceMonitor.getMemoryUsage();
+        if (this.scene.performanceMonitor && this.scene.performanceMonitor.getReport) {
+            const report = this.scene.performanceMonitor.getReport();
+            const fps = report.fps?.current || 60;
+            const particleCount = report.particles || 0;
+            const memory = report.memory || 0;
 
             this.recordPerformance(fps, particleCount, memory);
         }
